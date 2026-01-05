@@ -20,9 +20,23 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    meta: {
+      titleSuffix: '- PollWarehouse',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: '/media/Frame 1171278849.png',
+        },
+      ],
+    },
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
       beforeDashboard: ['@/components/BeforeDashboard'],
+      graphics: {
+        Logo: '@/components/AdminLogo',
+        Icon: '@/components/AdminIcon',
+      },
     },
     importMap: {
       baseDir: path.resolve(dirname),
