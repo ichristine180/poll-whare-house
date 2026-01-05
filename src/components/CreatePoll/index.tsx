@@ -179,14 +179,14 @@ export function CreatePollForm() {
           Go Pro - $8/mo
         </button>
         <p className="text-xs text-gray-400 mt-2">
-          Don't worry we will save any information entered above.
+          Don&apos;t worry we will save any information entered above.
         </p>
       </div>
 
       {/* Captcha Placeholder */}
       <div className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg">
         <input type="checkbox" className="w-5 h-5" />
-        <span className="text-sm">I'm not a robot</span>
+        <span className="text-sm">I&apos;m not a robot</span>
         <div className="ml-auto text-xs text-gray-400">reCAPTCHA</div>
       </div>
 
