@@ -27,6 +27,14 @@ export const Categories: CollectionConfig = {
       name: 'description',
       type: 'textarea',
     },
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Background image for the category tile',
+      },
+    },
     ...slugField('title'),
   ],
 }
