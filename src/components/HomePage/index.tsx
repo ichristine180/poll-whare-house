@@ -97,19 +97,37 @@ export async function HomePage() {
       <section>
         <div className="inline-flex items-center gap-2 border-b-2 border-indigo-600 pb-1 mb-4">
           <TrendingUp className="w-4 h-4 text-root" />
-          <h2 className="font-semibold text-indigo-600">Polls about Culture</h2>
+          <h2 className="font-semibold text-indigo-600">INTEREST</h2>
         </div>
-        {culturePolls.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {culturePolls.slice(0, 4).map((poll) => (
-              <PollCard key={poll.id} poll={poll} />
-            ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.map((category) => {
+              const categoryImage = category.image as Media | null;
+              return (
+                <Link
+                  key={category.id}
+                  href={`/category/${category.slug}`}
+                  className="relative aspect-[4/3] rounded-lg overflow-hidden group"
+                >
+                  {categoryImage?.url ? (
+                    <Image
+                      src={categoryImage.url}
+                      alt={category.title}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600" />
+                  )}
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-white font-semibold text-lg px-4 py-2">
+                      {category.title}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-        ) : (
-          <p className="text-gray-500 text-center py-8">
-            No polls in this category yet.
-          </p>
-        )}
       </section>
 
       {/* FAQ Section */}
@@ -208,50 +226,6 @@ export async function HomePage() {
         </div>
       </div>
 
-      {/* Poll Categories Section */}
-      {categories.length > 0 && (
-        <section>
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Poll Categories
-            </h2>
-            <p className="text-gray-600 text-sm max-w-xl mx-auto">
-              At nisl non amet fermentum ut urna a ante. Scelerisque felis ut in
-              etiam praesent posuere aliquam vitais. Nisl ut quisi quis
-              dignissim est commodo risus feugiat.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((category) => {
-              const categoryImage = category.image as Media | null;
-              return (
-                <Link
-                  key={category.id}
-                  href={`/category/${category.slug}`}
-                  className="relative aspect-[4/3] rounded-lg overflow-hidden group"
-                >
-                  {categoryImage?.url ? (
-                    <Image
-                      src={categoryImage.url}
-                      alt={category.title}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600" />
-                  )}
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white font-semibold text-lg px-4 py-2 border-2 border-white rounded-full">
-                      {category.title}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

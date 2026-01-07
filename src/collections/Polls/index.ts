@@ -42,6 +42,14 @@ export const Polls: CollectionConfig = {
       },
     },
     {
+      name: 'imageSource',
+      type: 'text',
+      admin: {
+        description: 'Source/credit for the hero image (e.g., "Photo by John Doe")',
+        condition: (data) => Boolean(data?.heroImage),
+      },
+    },
+    {
       name: 'description',
       type: 'textarea',
       admin: {
