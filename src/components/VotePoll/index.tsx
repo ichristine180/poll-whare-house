@@ -246,7 +246,7 @@ export function VotePoll({ poll }: VotePollProps) {
     if (hasVoted && categories.length === 0) {
       const fetchCategories = async () => {
         try {
-          const res = await fetch("/api/categories");
+          const res = await fetch("/api/categories-list");
           const data = await res.json();
           if (data.docs) {
             setCategories(data.docs);
