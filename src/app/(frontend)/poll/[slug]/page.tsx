@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const siteUrl = getServerSideURL()
+  const ogImageUrl = `${siteUrl}/api/og/poll?id=${slug}`
 
   return {
     title: `${poll.question} - PollWarehouse`,
@@ -46,6 +47,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: poll.question,
       description: poll.description || `Vote on: ${poll.question}`,
       url: `${siteUrl}/poll/${slug}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: poll.question,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: poll.question,
+      description: poll.description || `Vote on: ${poll.question}`,
+      images: [ogImageUrl],
     },
   }
 }

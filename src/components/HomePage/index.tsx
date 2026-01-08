@@ -105,7 +105,7 @@ export async function HomePage() {
               return (
                 <Link
                   key={category.id}
-                  href={`/category/${category.slug}`}
+                  href={`/interest/${category.slug}`}
                   className="relative aspect-[4/3] rounded-lg overflow-hidden group"
                 >
                   {categoryImage?.url ? (

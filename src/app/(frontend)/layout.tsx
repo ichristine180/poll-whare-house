@@ -1,8 +1,4 @@
 import type { Metadata } from 'next'
-
-import { cn } from '@/utilities/ui'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 import { Footer } from '@/Footer/Component'
@@ -10,11 +6,9 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
-
-import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
   const siteUrl = getServerSideURL()
 
@@ -42,18 +36,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
-      <head>
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-      </head>
-
-      <body className="flex flex-col min-h-screen">
-        <Providers>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <Providers>
+        <div className="flex flex-col min-h-screen">
           <Header />
           <div className="zoom-content">
             <main>
@@ -63,9 +52,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </main>
             <Footer />
           </div>
-        </Providers>
-      </body>
-    </html>
+        </div>
+      </Providers>
+    </>
   )
 }
 

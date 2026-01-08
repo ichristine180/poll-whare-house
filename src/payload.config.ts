@@ -8,6 +8,7 @@ import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Polls } from './collections/Polls'
 import { PollVotes } from './collections/PollVotes'
+import { Subscribers } from './collections/Subscribers'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -69,7 +70,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Polls, PollVotes, Media, Categories, Users],
+  collections: [Polls, PollVotes, Media, Categories, Subscribers, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
