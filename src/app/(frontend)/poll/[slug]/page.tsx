@@ -8,6 +8,7 @@ import type { Poll } from '@/payload-types'
 
 interface PageProps {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ voted?: string }>
 }
 
 async function getPoll(slug: string): Promise<Poll | null> {
@@ -24,8 +25,9 @@ async function getPoll(slug: string): Promise<Poll | null> {
   return result.docs[0] as Poll | null
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const { voted } = await searchParams
   const poll = await getPoll(slug)
 
   if (!poll) {
@@ -35,18 +37,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const siteUrl = getServerSideURL()
-  const ogImageUrl = `${siteUrl}/api/og/poll?id=${slug}`
+  // Include voted parameter in OG image URL if present
+  const ogImageUrl = voted
+    ? `${siteUrl}/api/og/poll?id=${slug}&voted=${encodeURIComponent(voted)}`
+    : `${siteUrl}/api/og/poll?id=${slug}`
+
+  const description = voted
+    ? `I voted ${voted}. What about you?`
+    : poll.description || `Vote on: ${poll.question}`
 
   return {
     title: `${poll.question} - PollWarehouse`,
-    description: poll.description || `Vote on: ${poll.question}`,
+    description,
     alternates: {
       canonical: `${siteUrl}/poll/${slug}`,
     },
     openGraph: {
       title: poll.question,
-      description: poll.description || `Vote on: ${poll.question}`,
-      url: `${siteUrl}/poll/${slug}`,
+      description,
+      url: voted ? `${siteUrl}/poll/${slug}?voted=${encodeURIComponent(voted)}` : `${siteUrl}/poll/${slug}`,
       images: [
         {
           url: ogImageUrl,
@@ -59,7 +68,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: 'summary_large_image',
       title: poll.question,
-      description: poll.description || `Vote on: ${poll.question}`,
+      description,
       images: [ogImageUrl],
     },
   }
