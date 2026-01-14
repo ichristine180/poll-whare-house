@@ -1,39 +1,44 @@
-import type { Metadata } from 'next'
-import React from 'react'
+import type { Metadata } from "next";
+import React from "react";
 
-import { Footer } from '@/Footer/Component'
-import { Header } from '@/Header/Component'
-import { Providers } from '@/providers'
-import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
-import { getServerSideURL } from '@/utilities/getURL'
+import { Footer } from "@/Footer/Component";
+import { Header } from "@/Header/Component";
+import { Providers } from "@/providers";
+import { mergeOpenGraph } from "@/utilities/mergeOpenGraph";
+import { draftMode } from "next/headers";
+import { getServerSideURL } from "@/utilities/getURL";
 
-export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
-  const siteUrl = getServerSideURL()
+export default async function FrontendLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isEnabled } = await draftMode();
+  const siteUrl = getServerSideURL();
 
   const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
+    "@context": "https://schema.org",
+    "@graph": [
       {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: 'PollWarehouse',
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: "PollWarehouse",
         url: siteUrl,
-        description: 'Create simple, real-time polls anyone can answer - no accounts, no friction.',
-        foundingDate: '2025',
+        description:
+          "Create simple, real-time polls anyone can answer - no accounts, no friction.",
+        foundingDate: "2025",
       },
       {
-        '@type': 'WebSite',
-        '@id': `${siteUrl}/#website`,
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
         url: siteUrl,
-        name: 'PollWarehouse',
+        name: "PollWarehouse",
         publisher: {
-          '@id': `${siteUrl}/#organization`,
+          "@id": `${siteUrl}/#organization`,
         },
       },
     ],
-  }
+  };
 
   return (
     <>
@@ -50,19 +55,19 @@ export default async function FrontendLayout({ children }: { children: React.Rea
                 {children}
               </div>
             </main>
-            <Footer />
           </div>
+          <Footer />
         </div>
       </Providers>
     </>
-  )
+  );
 }
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
   openGraph: mergeOpenGraph(),
   twitter: {
-    card: 'summary_large_image',
-    creator: '@pollwarehouse',
+    card: "summary_large_image",
+    creator: "@pollwarehouse",
   },
-}
+};
