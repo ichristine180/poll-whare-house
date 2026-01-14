@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Search, ChevronRight, ChevronLeft, TrendingUp } from 'lucide-react'
-import { PollCard } from '@/components/PollCard'
-import type { Poll, Category } from '@/payload-types'
+import { Search, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react'
+import type { Category, Media } from '@/payload-types'
 
-interface InterestHubProps {
-  category: Category
-  polls: Poll[]
+interface InterestHubPageProps {
+  categories: Category[]
   totalPages: number
   totalDocs: number
   currentPage: number
@@ -18,18 +17,17 @@ interface InterestHubProps {
   searchQuery: string
 }
 
-export function InterestHub({
-  category,
-  polls,
+export function InterestHubPage({
+  categories,
   totalPages,
   totalDocs,
   currentPage,
   hasNextPage,
   hasPrevPage,
-  searchQuery,
-}: InterestHubProps) {
+  searchQuery: initialSearch,
+}: InterestHubPageProps) {
   const router = useRouter()
-  const [search, setSearch] = useState(searchQuery)
+  const [search, setSearch] = useState(initialSearch)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,21 +35,21 @@ export function InterestHub({
     if (search.trim()) {
       params.set('q', search.trim())
     }
-    router.push(`/interest/${category.slug}?${params.toString()}`)
+    router.push(`/interest?${params.toString()}`)
   }
 
   const clearSearch = () => {
     setSearch('')
-    router.push(`/interest/${category.slug}`)
+    router.push('/interest')
   }
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams()
-    if (searchQuery) {
-      params.set('q', searchQuery)
+    if (initialSearch) {
+      params.set('q', initialSearch)
     }
     params.set('page', page.toString())
-    router.push(`/interest/${category.slug}?${params.toString()}`)
+    router.push(`/interest?${params.toString()}`)
   }
 
   const getPageNumbers = () => {
@@ -95,21 +93,17 @@ export function InterestHub({
           Home
         </Link>
         <ChevronRight className="w-4 h-4" />
-        <Link href="/interest" className="hover:text-gray-700">
-          Interest
-        </Link>
-        <ChevronRight className="w-4 h-4" />
-        <span className="text-indigo-600">{category.title}</span>
+        <span className="text-indigo-600">Interest Hub</span>
       </nav>
 
       {/* Page Title */}
       <div className="text-center mb-6">
         <h1 className="text-gray-900 text-2xl sm:text-[20px] font-bold mb-2">
-          {category.title}
+          Explore Topics That Interest You
           <span className="text-indigo-600">!</span>
         </h1>
         <p className="text-gray-600 text-lg sm:text-base">
-          {category.description || `Explore polls about ${category.title}`}
+          Browse polls by category. Discover what people think about various topics.
         </p>
       </div>
 
@@ -120,7 +114,7 @@ export function InterestHub({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={`Search ${category.title} polls...`}
+            placeholder="Search for a category..."
             className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-[15px]"
           />
           <button
@@ -133,10 +127,10 @@ export function InterestHub({
       </div>
 
       {/* Search Results Info */}
-      {searchQuery && (
+      {initialSearch && (
         <div className="flex items-center justify-between mb-4">
           <p className="text-gray-600">
-            {totalDocs} result{totalDocs !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
+            {totalDocs} result{totalDocs !== 1 ? 's' : ''} for &quot;{initialSearch}&quot;
           </p>
           <button
             onClick={clearSearch}
@@ -151,35 +145,64 @@ export function InterestHub({
       <div className="flex items-center justify-between mb-4 border-b border-gray-200 pb-2">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-lg font-semibold text-gray-900">All Polls</h2>
+          <h2 className="text-lg font-semibold text-gray-900">All Categories</h2>
         </div>
-        <span className="text-sm text-gray-500">{totalDocs} polls</span>
+        <span className="text-sm text-gray-500">{totalDocs} categories</span>
       </div>
 
-      {/* Polls Grid */}
-      {polls.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {polls.map((poll) => (
-            <PollCard key={poll.id} poll={poll} />
-          ))}
+      {/* Categories Grid */}
+      {categories.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {categories.map((category) => {
+            const categoryImage = category.image as Media | null
+            return (
+              <Link
+                key={category.id}
+                href={`/interest/${category.slug}`}
+                className="relative aspect-[4/3] rounded-lg overflow-hidden group"
+              >
+                {categoryImage?.url ? (
+                  <Image
+                    src={categoryImage.url}
+                    alt={category.title}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600" />
+                )}
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                  <span className="text-white font-semibold text-lg text-center">
+                    {category.title}
+                  </span>
+                  {category.description && (
+                    <span className="text-white/70 text-xs text-center mt-1 line-clamp-2">
+                      {category.description}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            )
+          })}
         </div>
       ) : (
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-8 h-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No polls found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
           <p className="text-gray-500">
-            {searchQuery
-              ? `No polls matching "${searchQuery}" in ${category.title}`
-              : `No polls in ${category.title} yet`}
+            {initialSearch
+              ? `No categories matching "${initialSearch}"`
+              : 'Categories will appear here once they are created.'}
           </p>
-          {searchQuery && (
+          {initialSearch && (
             <button
               onClick={clearSearch}
               className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              View all {category.title} polls
+              View all categories
             </button>
           )}
         </div>
@@ -188,16 +211,14 @@ export function InterestHub({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-1 mt-6">
-          {/* First page */}
           <button
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
             className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            «
+            &laquo;
           </button>
 
-          {/* Previous */}
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={!hasPrevPage}
@@ -206,7 +227,6 @@ export function InterestHub({
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          {/* Page numbers */}
           {getPageNumbers().map((page, index) =>
             page === '...' ? (
               <span
@@ -230,7 +250,6 @@ export function InterestHub({
             ),
           )}
 
-          {/* Next */}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={!hasNextPage}
@@ -239,27 +258,15 @@ export function InterestHub({
             <ChevronRight className="w-4 h-4" />
           </button>
 
-          {/* Last page */}
           <button
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}
             className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            »
+            &raquo;
           </button>
         </div>
       )}
-
-      {/* Back to all categories */}
-      <div className="text-center pt-4">
-        <Link
-          href="/interest"
-          className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back to all categories
-        </Link>
-      </div>
     </div>
   )
 }

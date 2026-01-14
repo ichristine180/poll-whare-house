@@ -221,7 +221,7 @@ export function CreatePollForm() {
       </div>
 
       {/* Poll Options */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
+      {/* <div className="bg-white border border-gray-200 rounded-lg p-6">
         <h3 className="font-semibold mb-4">Poll options</h3>
         <div className="grid grid-cols-2 gap-4">
           <OptionToggle
@@ -278,7 +278,7 @@ export function CreatePollForm() {
             }
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Pro Upgrade Banner */}
       {/* <div className="bg-[#6D4AF9]/5 border border-[#6D4AF9]/20 rounded-lg p-6 text-center">

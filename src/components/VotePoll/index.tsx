@@ -415,14 +415,17 @@ export function VotePoll({ poll }: VotePollProps) {
       {/* Hero Image - show only before voting */}
       {!hasVoted && heroImageUrl && (
         <div className="mb-4">
-          <div className="relative w-full h-48 sm:h-64 md:h-80 rounded-lg overflow-hidden">
-            <Image
-              src={heroImageUrl}
-              alt={currentPoll.question}
-              fill
-              className="object-cover"
-            />
-          </div>
+          <div
+            style={{
+              backgroundImage: `url(${heroImageUrl})`,
+              backgroundPosition: "center center",
+              backgroundSize: "cover",
+              paddingBottom: "56.25%",
+              width: "100%",
+              borderRadius: "8px",
+            }}
+          />
+
           {currentPoll.imageSource && (
             <div className="flex items-center gap-2 mt-2 text-gray-500 text-sm">
               <svg

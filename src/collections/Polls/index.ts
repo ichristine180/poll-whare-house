@@ -68,6 +68,9 @@ export const Polls: CollectionConfig = {
       ],
       admin: {
         description: 'Poll options (minimum 2, maximum 10)',
+        components: {
+          RowLabel: '@/collections/Polls/OptionRowLabel',
+        },
       },
       fields: [
         {
@@ -230,6 +233,15 @@ export const Polls: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Feature this poll on homepage',
+      },
+    },
+    {
+      name: 'popular',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Mark this poll as popular',
       },
     },
     {
