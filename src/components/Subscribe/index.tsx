@@ -145,7 +145,7 @@ export function Subscribe() {
 
   return (
     <div className="bg-white">
-      <div className="max-w-3xl mx-auto px-4 py-6">
+      <div className="space-y-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link href="/" className="hover:text-gray-700">

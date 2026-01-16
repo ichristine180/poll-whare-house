@@ -62,9 +62,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
                   priority
                 />
               )}
-              {data.logo?.text && (
-                <span className="font-bold text-xl">{data.logo.text}</span>
-              )}
+              <Image
+                src="/logo-text.jpg"
+                alt="PollWarehouse.com"
+                width={180}
+                height={30}
+                className="object-contain rounded-lg"
+                priority
+              />
             </Link>
 
             {/* Menu Button */}

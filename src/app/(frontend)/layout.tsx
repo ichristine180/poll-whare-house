@@ -49,7 +49,7 @@ export default async function FrontendLayout({
       <Providers>
         <div className="flex flex-col min-h-screen">
           <Header />
-          <div className="zoom-content">
+          <div className="zoom-content flex-1">
             <main>
               <div className="container mx-auto max-w-3xl py-4 px-4 sm:px-6 lg:px-8">
                 {children}

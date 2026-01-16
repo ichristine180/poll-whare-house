@@ -382,7 +382,7 @@ export function VotePoll({ poll }: VotePollProps) {
   }
 
   return (
-    <div className="bg-white max-w-2xl mx-auto">
+    <div className="space-y-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
         <Link href="/" className="hover:text-gray-700">
@@ -822,9 +822,33 @@ export function VotePoll({ poll }: VotePollProps) {
           {/* Share Section */}
           {!currentPoll.pollSettings?.hideShareOptions && (
             <div className="mb-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Tell Your Friends About This Poll
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900">
+                  Share Your Vote
+                </h3>
+                {!noMorePolls && (
+                  <button
+                    onClick={handleNextPoll}
+                    disabled={isLoadingNextPoll}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+                  >
+                    {isLoadingNextPoll ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M3 12h18M3 6h18M3 18h18" />
+                      </svg>
+                    )}
+                    {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
+                  </button>
+                )}
+              </div>
               <div className="flex gap-3">
                 <button
                   onClick={() => handleShare("facebook")}
@@ -865,36 +889,6 @@ export function VotePoll({ poll }: VotePollProps) {
               </div>
             </div>
           )}
-
-          {/* Take Another Poll */}
-          <div className="flex justify-center mb-6">
-            {noMorePolls ? (
-              <div className="text-center text-gray-600 py-3">
-                No more polls available at the moment
-              </div>
-            ) : (
-              <button
-                onClick={handleNextPoll}
-                disabled={isLoadingNextPoll}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
-              >
-                {isLoadingNextPoll ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M3 12h18M3 6h18M3 18h18" />
-                  </svg>
-                )}
-                {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
-              </button>
-            )}
-          </div>
 
           {/* Create Your Own Poll Section */}
           <div>
