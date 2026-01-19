@@ -14,15 +14,39 @@ function createVoterIdentifier(ip: string, userAgent: string, pollId: string): s
     .digest('hex')
 }
 
+function getBadgeFromAxis(
+  pollAxis: any,
+  votedOption: string,
+  intensity: 'soft' | 'strong'
+): { title: string; subtext: string } | null {
+  if (!pollAxis?.badges) return null
+
+  const isYes = votedOption.toLowerCase() === 'yes'
+  const isNo = votedOption.toLowerCase() === 'no'
+
+  if (isYes && intensity === 'soft') {
+    return pollAxis.badges.yesSoft
+  } else if (isYes && intensity === 'strong') {
+    return pollAxis.badges.yesStrong
+  } else if (isNo && intensity === 'soft') {
+    return pollAxis.badges.noSoft
+  } else if (isNo && intensity === 'strong') {
+    return pollAxis.badges.noStrong
+  }
+
+  return null
+}
+
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
     const payload = await getPayloadHMR({ config: configPromise })
 
-    // Get the poll
+    // Get the poll with pollAxis populated
     const poll = await payload.findByID({
       collection: 'polls',
       id,
+      depth: 2,
     })
 
     if (!poll) {
@@ -47,6 +71,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const hasVoted = existingVote.docs.length > 0
     const votedOptionIndex = hasVoted ? existingVote.docs[0].optionIndex : null
+    const intensity = hasVoted ? (existingVote.docs[0].intensity as 'soft' | 'strong' | null) : null
 
     // Calculate results with percentages
     const totalVotes = poll.totalVotes || 0
@@ -56,11 +81,20 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       percentage: totalVotes > 0 ? Math.round(((option.votes || 0) / totalVotes) * 100) : 0,
     })) || []
 
+    // Get badge info if user has voted and poll has an axis
+    let badge: { title: string; subtext: string } | null = null
+    if (hasVoted && votedOptionIndex !== null && intensity && poll.pollAxis && typeof poll.pollAxis === 'object') {
+      const votedOption = poll.options?.[votedOptionIndex]?.text || ''
+      badge = getBadgeFromAxis(poll.pollAxis, votedOption, intensity)
+    }
+
     return NextResponse.json({
       hasVoted,
       votedOptionIndex,
       results,
       totalVotes,
+      badge,
+      intensity,
     })
   } catch (error: any) {
     console.error('Error checking vote status:', error)
@@ -79,10 +113,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Option index is required' }, { status: 400 })
     }
 
-    // Get the poll
+    // Get the poll with pollAxis populated
     const poll = await payload.findByID({
       collection: 'polls',
       id,
+      depth: 2,
     })
 
     if (!poll) {
@@ -117,7 +152,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'You have already voted on this poll' }, { status: 400 })
     }
 
-    // Record the vote
+    // Randomly select intensity (soft or strong)
+    const intensity: 'soft' | 'strong' = Math.random() < 0.5 ? 'soft' : 'strong'
+
+    // Record the vote with intensity
     await payload.create({
       collection: 'poll-votes',
       data: {
@@ -125,6 +163,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         optionIndex,
         voterIdentifier,
         userAgent,
+        intensity,
       },
     })
 
@@ -151,10 +190,19 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       percentage: newTotalVotes > 0 ? Math.round(((option.votes || 0) / newTotalVotes) * 100) : 0,
     })) || []
 
+    // Get badge info if poll has an axis
+    let badge: { title: string; subtext: string } | null = null
+    if (poll.pollAxis && typeof poll.pollAxis === 'object') {
+      const votedOption = poll.options[optionIndex].text
+      badge = getBadgeFromAxis(poll.pollAxis, votedOption, intensity)
+    }
+
     return NextResponse.json({
       success: true,
       results,
       totalVotes: newTotalVotes,
+      badge,
+      intensity,
     })
   } catch (error: any) {
     console.error('Error voting:', error)

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
+import { PollAxes } from './collections/PollAxes'
 import { Polls } from './collections/Polls'
 import { PollVotes } from './collections/PollVotes'
 import { Subscribers } from './collections/Subscribers'
@@ -70,7 +71,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Polls, PollVotes, Media, Categories, Subscribers, Users],
+  collections: [Polls, PollAxes, PollVotes, Media, Categories, Subscribers, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

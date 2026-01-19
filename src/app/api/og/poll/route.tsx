@@ -478,7 +478,7 @@ export async function GET(req: NextRequest) {
                   fontFamily: 'Inter',
                 }}
               >
-                I voted {votedOption}. What about you?
+                {results.find((r: any) => r.text.toLowerCase() === votedOption?.toLowerCase())?.percentage || 0}% choose the same, what about you?
               </div>
             </div>
           </div>

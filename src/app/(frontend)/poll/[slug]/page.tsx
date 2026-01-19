@@ -42,8 +42,14 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     ? `${siteUrl}/api/og/poll?id=${slug}&voted=${encodeURIComponent(voted)}`
     : `${siteUrl}/api/og/poll?id=${slug}`
 
+  // Calculate percentage for voted option
+  const totalVotes = poll.totalVotes || 0
+  const votedPercentage = voted && totalVotes > 0
+    ? Math.round(((poll.options?.find(o => o.text.toLowerCase() === voted.toLowerCase())?.votes || 0) / totalVotes) * 100)
+    : 0
+
   const description = voted
-    ? `I voted ${voted}. What about you?`
+    ? `${votedPercentage}% choose the same, what about you?`
     : poll.description || `Vote on: ${poll.question}`
 
   return {

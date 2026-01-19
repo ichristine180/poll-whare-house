@@ -49,6 +49,17 @@ export const PollVotes: CollectionConfig = {
         description: 'Browser user agent for analytics',
       },
     },
+    {
+      name: 'intensity',
+      type: 'select',
+      options: [
+        { label: 'Soft', value: 'soft' },
+        { label: 'Strong', value: 'strong' },
+      ],
+      admin: {
+        description: 'Randomly assigned intensity (soft or strong) for badge display',
+      },
+    },
   ],
   timestamps: true,
 }

@@ -42,12 +42,14 @@ function ShareCard({
   heroImageUrl,
   votedOption,
   totalVotes,
+  badge,
 }: {
   question: string;
   results: Array<{ text: string; votes: number; percentage: number }>;
   heroImageUrl?: string | null;
   votedOption?: string | null;
   totalVotes: number;
+  badge?: { title: string; subtext: string } | null;
 }) {
   const getColor = (text: string, index: number) => {
     const lowerText = text.toLowerCase();
@@ -86,11 +88,22 @@ function ShareCard({
 
   return (
     <div className="w-full max-w-[600px] px-4 py-5 sm:px-8 sm:py-8 bg-indigo-50 rounded-sm">
-      <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 text-center mb-5 sm:mb-8 leading-snug">
-        {question}
-      </h1>
+      {badge ? (
+        <div className="text-center mb-5 sm:mb-8">
+          <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-snug">
+            {badge.title}
+          </h1>
+          <p className="text-[14px] sm:text-[16px] text-gray-600 mt-2">
+            {badge.subtext}
+          </p>
+        </div>
+      ) : (
+        <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 text-center mb-5 sm:mb-8 leading-snug">
+          {question}
+        </h1>
+      )}
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
+      <div className="flex flex-col sm:flex-row  justify-center gap-6 sm:gap-12">
         {/* Donut Chart with Total Votes */}
         <div className="flex flex-col items-center">
           <div className="relative flex-shrink-0 w-[140px] h-[140px] sm:w-[180px] sm:h-[180px]">
@@ -153,10 +166,24 @@ function ShareCard({
               )}
             </div>
           </div>
+           <div className="flex flex-row   gap-6 sm:gap-8 mt-4">
+        {results.map((option, index) => (
+          <div key={index} className="flex items-center gap-2 sm:gap-3">
+            <div
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded flex-shrink-0"
+              style={{ backgroundColor: getColor(option.text, index) }}
+            />
+            <span className="text-[15px] sm:text-[18px] font-medium text-gray-800">
+              {option.text}
+            </span>
+            
+          </div>
+        ))}
+      </div>
         </div>
 
         {/* Legend */}
-        <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex flex-col gap-2 sm:gap-2">
           {/* Total Votes Display */}
           <div className="text-center sm:text-left mb-2">
             <span className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -165,28 +192,17 @@ function ShareCard({
             <span className="text-sm text-gray-500 ml-2">Votes</span>
           </div>
 
-          {results.map((option, index) => (
-            <div key={index} className="flex items-center gap-3 sm:gap-4">
-              <div
-                className="w-5 h-5 sm:w-6 sm:h-6 rounded flex-shrink-0"
-                style={{ backgroundColor: getColor(option.text, index) }}
-              />
-              <span className="text-[15px] sm:text-[18px] font-medium text-gray-800 min-w-[32px] sm:min-w-[40px]">
-                {option.text}
-              </span>
-              <span className="text-[14px] sm:text-[16px] text-gray-500">
-                {option.votes} votes {option.percentage}%
-              </span>
-            </div>
-          ))}
+         
 
           {votedOption && (
-            <p className="text-[14px] sm:text-[16px] font-medium text-gray-700 mt-2 sm:mt-3">
-              I voted {votedOption}. What about you?
+            <p className="text-[14px] sm:text-[16px] font-medium text-gray-700">
+              {results.find(r => r.text === votedOption)?.percentage || 0}% choose the same, what about you?
             </p>
           )}
         </div>
+        
       </div>
+     
     </div>
   );
 }
@@ -206,6 +222,7 @@ export function VotePoll({ poll }: VotePollProps) {
   const [isLoadingNextPoll, setIsLoadingNextPoll] = useState(false);
   const [noMorePolls, setNoMorePolls] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [badge, setBadge] = useState<{ title: string; subtext: string } | null>(null);
 
   const heroImage = currentPoll.heroImage as Media | null;
   const heroImageUrl = heroImage?.url || null;
@@ -224,11 +241,13 @@ export function VotePoll({ poll }: VotePollProps) {
         setResults(data.results);
         setTotalVotes(data.totalVotes);
         setShowResults(false);
+        setBadge(data.badge || null);
       } else {
         setHasVoted(false);
         setVotedOptionIndex(null);
         setResults([]);
         setTotalVotes(currentPoll.totalVotes || 0);
+        setBadge(null);
       }
     } catch (error) {
       console.error("Error checking vote status:", error);
@@ -275,6 +294,7 @@ export function VotePoll({ poll }: VotePollProps) {
         setResults([]);
         setTotalVotes(data.poll.totalVotes || 0);
         setShowResults(false);
+        setBadge(null);
         // Update URL without navigation
         window.history.pushState({}, "", `/${data.poll.slug}`);
       } else {
@@ -308,6 +328,7 @@ export function VotePoll({ poll }: VotePollProps) {
         setResults(data.results);
         setTotalVotes(data.totalVotes);
         setShowResults(false);
+        setBadge(data.badge || null);
       } else {
         alert(data.error || "Failed to record vote");
       }
@@ -520,6 +541,7 @@ export function VotePoll({ poll }: VotePollProps) {
                   : null
               }
               totalVotes={totalVotes}
+              badge={badge}
             />
           </div>
 

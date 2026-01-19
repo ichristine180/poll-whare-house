@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
+import { cn } from "@/utilities/ui";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 import { Footer } from "@/Footer/Component";
 import { Header } from "@/Header/Component";
@@ -7,6 +10,7 @@ import { Providers } from "@/providers";
 import { mergeOpenGraph } from "@/utilities/mergeOpenGraph";
 import { draftMode } from "next/headers";
 import { getServerSideURL } from "@/utilities/getURL";
+import "./globals.css";
 
 export default async function FrontendLayout({
   children,
@@ -41,25 +45,35 @@ export default async function FrontendLayout({
   };
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <Providers>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <div className="zoom-content flex-1">
-            <main>
-              <div className="container mx-auto max-w-3xl py-4 px-4 sm:px-6 lg:px-8">
-                {children}
-              </div>
-            </main>
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang="en"
+      suppressHydrationWarning
+    >
+      <head>
+        <link href="/favicon.ico" rel="icon" sizes="32x32" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
+      <body>
+        <Providers>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <div className="zoom-content flex-1">
+              <main>
+                <div className="container mx-auto max-w-3xl py-4 px-4 sm:px-6 lg:px-8">
+                  {children}
+                </div>
+              </main>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </Providers>
-    </>
+        </Providers>
+      </body>
+    </html>
   );
 }
 

@@ -112,6 +112,15 @@ export const Polls: CollectionConfig = {
       },
     },
     {
+      name: 'pollAxis',
+      type: 'relationship',
+      relationTo: 'poll-axes',
+      admin: {
+        position: 'sidebar',
+        description: 'Badge axis for this poll (determines badge titles/subtexts based on vote)',
+      },
+    },
+    {
       name: 'tags',
       type: 'array',
       admin: {
