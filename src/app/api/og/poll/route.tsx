@@ -107,22 +107,7 @@ export async function GET(req: NextRequest) {
               padding: '32px 48px',
             }}
           >
-            {/* Site header */}
-            <div
-              style={{
-                fontSize: '16px',
-                fontWeight: 800,
-                color: '#6366f1',
-                textAlign: 'center',
-                marginBottom: '16px',
-                display: 'flex',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                fontFamily: 'Inter',
-              }}
-            >
-              POLLWAREHOUSE.COM
-            </div>
+          
 
             {/* Question */}
             <p
@@ -260,8 +245,8 @@ export async function GET(req: NextRequest) {
       return fallbackColors[index % fallbackColors.length]
     }
 
-    const size = 340
-    const strokeWidth = 50
+    const size = 280
+    const strokeWidth = 24
     const radius = (size - strokeWidth) / 2
     const circumference = 2 * Math.PI * radius
     const centerSize = size - strokeWidth * 2 - 16
@@ -304,22 +289,7 @@ export async function GET(req: NextRequest) {
             padding: '32px 48px',
           }}
         >
-          {/* Site header */}
-          <div
-            style={{
-              fontSize: '16px',
-              fontWeight: 800,
-              color: '#6366f1',
-              textAlign: 'center',
-              marginBottom: '4px',
-              display: 'flex',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              fontFamily: 'Inter',
-            }}
-          >
-            POLLWAREHOUSE.COM
-          </div>
+        
 
           {/* Question */}
           <p
@@ -337,148 +307,185 @@ export async function GET(req: NextRequest) {
             {poll.question}
           </p>
 
-          {/* Chart and Legend Container */}
+          {/* Chart and Vote Info Container */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '64px',
+              gap: '80px',
               flex: 1,
             }}
           >
-            {/* Donut Chart */}
+            {/* Donut Chart with Legend below */}
             <div
               style={{
-                position: 'relative',
-                width: `${size}px`,
-                height: `${size}px`,
                 display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
               }}
             >
-              <svg
-                width={size}
-                height={size}
-                viewBox={`0 0 ${size} ${size}`}
+              {/* Donut Chart */}
+              <div
                 style={{
-                  transform: 'rotate(-90deg)',
+                  position: 'relative',
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  display: 'flex',
                 }}
               >
-                <circle
-                  cx={size / 2}
-                  cy={size / 2}
-                  r={radius}
-                  fill="none"
-                  stroke="#d1d5db"
-                  stroke-width={strokeWidth}
-                />
-                {[...segments].reverse().map((segment: any, index: number) => (
+                <svg
+                  width={size}
+                  height={size}
+                  viewBox={`0 0 ${size} ${size}`}
+                  style={{
+                    transform: 'rotate(-90deg)',
+                  }}
+                >
                   <circle
-                    key={index}
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
                     fill="none"
-                    stroke={segment.color}
+                    stroke="#d1d5db"
                     stroke-width={strokeWidth}
-                    stroke-dasharray={segment.dashArray}
-                    stroke-dashoffset={segment.dashOffset}
                   />
+                  {[...segments].reverse().map((segment: any, index: number) => (
+                    <circle
+                      key={index}
+                      cx={size / 2}
+                      cy={size / 2}
+                      r={radius}
+                      fill="none"
+                      stroke={segment.color}
+                      stroke-width={strokeWidth}
+                      stroke-dasharray={segment.dashArray}
+                      stroke-dashoffset={segment.dashOffset}
+                    />
+                  ))}
+                </svg>
+
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${(size - centerSize - 16) / 2}px`,
+                    left: `${(size - centerSize - 16) / 2}px`,
+                    width: `${centerSize + 16}px`,
+                    height: `${centerSize + 16}px`,
+                    borderRadius: '50%',
+                    backgroundColor: 'white',
+                    display: 'flex',
+                  }}
+                />
+
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: `${(size - centerSize) / 2}px`,
+                    left: `${(size - centerSize) / 2}px`,
+                    width: `${centerSize}px`,
+                    height: `${centerSize}px`,
+                    borderRadius: '50%',
+                    backgroundColor: '#9ca3af',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {absoluteHeroUrl ? (
+                    <img
+                      src={absoluteHeroUrl}
+                      alt=""
+                      width={centerSize}
+                      height={centerSize}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  ) : (
+                    <div style={{ fontSize: '32px', color: 'white', display: 'flex' }}>Poll</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Legend below donut */}
+              <div style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
+                {results.map((option: any, index: number) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div
+                      style={{
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '3px',
+                        backgroundColor: getColor(option.text, index),
+                        flexShrink: 0,
+                        display: 'flex',
+                      }}
+                    />
+                    <div
+                      style={{
+                        fontSize: '15px',
+                        color: '#1f2937',
+                        display: 'flex',
+                        fontWeight: 500,
+                        fontFamily: 'Inter',
+                      }}
+                    >
+                      {option.text}
+                    </div>
+                  </div>
                 ))}
-              </svg>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  top: `${(size - centerSize - 20) / 2}px`,
-                  left: `${(size - centerSize - 20) / 2}px`,
-                  width: `${centerSize + 20}px`,
-                  height: `${centerSize + 20}px`,
-                  borderRadius: '50%',
-                  backgroundColor: 'white',
-                  display: 'flex',
-                }}
-              />
-
-              <div
-                style={{
-                  position: 'absolute',
-                  top: `${(size - centerSize) / 2}px`,
-                  left: `${(size - centerSize) / 2}px`,
-                  width: `${centerSize}px`,
-                  height: `${centerSize}px`,
-                  borderRadius: '50%',
-                  backgroundColor: '#9ca3af',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {absoluteHeroUrl ? (
-                  <img
-                    src={absoluteHeroUrl}
-                    alt=""
-                    width={centerSize}
-                    height={centerSize}
-                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                  />
-                ) : (
-                  <div style={{ fontSize: '32px', color: 'white', display: 'flex' }}>Poll</div>
-                )}
               </div>
             </div>
 
-            {/* Legend */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {results.map((option: any, index: number) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '4px',
-                      backgroundColor: getColor(option.text, index),
-                      flexShrink: 0,
-                      display: 'flex',
-                    }}
-                  />
-                  <div
-                    style={{
-                      fontSize: '28px',
-                      color: '#000000',
-                      display: 'flex',
-                      minWidth: '60px',
-                      fontWeight: 500,
-                      fontFamily: 'Inter',
-                    }}
-                  >
-                    {option.text}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '26px',
-                      display: 'flex',
-                      fontWeight: 500,
-                      fontFamily: 'Inter',
-                    }}
-                  >
-                    {option.votes} votes {option.percentage}%
-                  </div>
-                </div>
-              ))}
+            {/* Vote Info */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* Total Votes */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <span
+                  style={{
+                    fontSize: '48px',
+                    fontWeight: 800,
+                    color: '#111827',
+                    fontFamily: 'Inter',
+                  }}
+                >
+                  {totalVotes.toLocaleString()}
+                </span>
+                <span
+                  style={{
+                    fontSize: '20px',
+                    color: '#6b7280',
+                    fontFamily: 'Inter',
+                  }}
+                >
+                  Votes
+                </span>
+              </div>
 
+              {/* I voted text */}
               <div
                 style={{
                   display: 'flex',
-                  marginTop: '12px',
-                  fontSize: '26px',
-                  color: '#000000',
-                  fontWeight: 600,
+                  fontSize: '28px',
+                  color: '#1f2937',
                   fontFamily: 'Inter',
                 }}
               >
-                {results.find((r: any) => r.text.toLowerCase() === votedOption?.toLowerCase())?.percentage || 0}% choose the same, what about you?
+                <span style={{ fontWeight: 400 }}>I </span>
+                <span style={{ fontWeight: 700, marginLeft: '6px', marginRight: '6px' }}>voted</span>
+                <span style={{ fontWeight: 400 }}>{votedOption} what about you ?</span>
+              </div>
+
+              {/* Percentage text */}
+              <div
+                style={{
+                  display: 'flex',
+                  fontSize: '24px',
+                  color: '#6b7280',
+                  fontFamily: 'Inter',
+                }}
+              >
+                {results.find((r: any) => r.text.toLowerCase() === votedOption?.toLowerCase())?.percentage || 0}% choose the same,
               </div>
             </div>
           </div>

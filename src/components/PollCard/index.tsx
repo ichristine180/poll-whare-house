@@ -17,10 +17,10 @@ export const PollCard: React.FC<PollCardProps> = ({ poll }) => {
     <Link
       key={poll.id}
       href={`/poll/${poll.slug}`}
-      className="flex-shrink-0 w-[143px] bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+      className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
     >
       {/* Image */}
-      <div className="relative w-full h-[90px] bg-gray-100">
+      <div className="relative w-full aspect-[4/3] bg-gray-100">
         {imageUrl ? (
           <Image
             src={imageUrl}

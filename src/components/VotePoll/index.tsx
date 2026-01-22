@@ -66,7 +66,7 @@ function ShareCard({
   };
 
   const size = 180;
-  const strokeWidth = 32;
+  const strokeWidth = 16;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const centerSize = size - strokeWidth * 2 - 12;
@@ -93,9 +93,9 @@ function ShareCard({
           <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-snug">
             {badge.title}
           </h1>
-          <p className="text-[14px] sm:text-[16px] text-gray-600 mt-2">
+          <i className="text-[12px] sm:text-[13px] text-gray-600 mt-2">
             {badge.subtext}
-          </p>
+          </i>
         </div>
       ) : (
         <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 text-center mb-5 sm:mb-8 leading-snug">
@@ -106,7 +106,7 @@ function ShareCard({
       <div className="flex flex-col sm:flex-row  justify-center gap-6 sm:gap-12">
         {/* Donut Chart with Total Votes */}
         <div className="flex flex-col items-center">
-          <div className="relative flex-shrink-0 w-[140px] h-[140px] sm:w-[180px] sm:h-[180px]">
+          <div className="relative flex-shrink-0 w-[160px] h-[160px] sm:w-[180px] sm:h-[180px]">
             <svg
               viewBox={`0 0 ${size} ${size}`}
               className="w-full h-full absolute top-0 left-0"
@@ -166,38 +166,40 @@ function ShareCard({
               )}
             </div>
           </div>
-           <div className="flex flex-row   gap-6 sm:gap-8 mt-4">
+           <div className="flex flex-row gap-4 sm:gap-6 mt-3">
         {results.map((option, index) => (
-          <div key={index} className="flex items-center gap-2 sm:gap-3">
+          <div key={index} className="flex items-center gap-1.5 sm:gap-2">
             <div
-              className="w-5 h-5 sm:w-6 sm:h-6 rounded flex-shrink-0"
+              className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm flex-shrink-0"
               style={{ backgroundColor: getColor(option.text, index) }}
             />
-            <span className="text-[15px] sm:text-[18px] font-medium text-gray-800">
+            <span className="text-[13px] sm:text-[15px] font-medium text-gray-800">
               {option.text}
             </span>
-            
           </div>
         ))}
       </div>
         </div>
 
-        {/* Legend */}
-        <div className="flex flex-col gap-2 sm:gap-2">
+        {/* Vote Info */}
+        <div className="flex flex-col gap-2 sm:gap-2 mt-8">
           {/* Total Votes Display */}
-          <div className="text-center sm:text-left mb-2">
+          <div className="text-center sm:text-left">
             <span className="text-2xl sm:text-3xl font-bold text-gray-900">
               {totalVotes.toLocaleString()}
             </span>
             <span className="text-sm text-gray-500 ml-2">Votes</span>
           </div>
 
-         
-
           {votedOption && (
-            <p className="text-[14px] sm:text-[16px] font-medium text-gray-700">
-              {results.find(r => r.text === votedOption)?.percentage || 0}% choose the same, what about you?
-            </p>
+            <>
+              <p className="text-[16px] sm:text-[18px] text-gray-800">
+                I <span className="font-bold">voted</span> {votedOption} what about you ?
+              </p>
+              <p className="text-[14px] sm:text-[16px] text-gray-500">
+                {results.find(r => r.text === votedOption)?.percentage || 0}% choose the same.
+              </p>
+            </>
           )}
         </div>
         
@@ -589,6 +591,36 @@ export function VotePoll({ poll }: VotePollProps) {
                   </span>
                 </button>
               </div>
+
+              {/* Take Another Poll - near share buttons */}
+              <div className="flex justify-center mt-4">
+                {noMorePolls ? (
+                  <div className="text-center text-gray-600 py-3">
+                    No more polls available at the moment
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleNextPoll}
+                    disabled={isLoadingNextPoll}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+                  >
+                    {isLoadingNextPoll ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <svg
+                        className="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M3 12h18M3 6h18M3 18h18" />
+                      </svg>
+                    )}
+                    {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -710,36 +742,6 @@ export function VotePoll({ poll }: VotePollProps) {
               <p className="text-gray-700 text-sm">{currentPoll.description}</p>
             </div>
           )}
-
-          {/* Take Another Poll */}
-          <div className="flex justify-center mb-6">
-            {noMorePolls ? (
-              <div className="text-center text-gray-600 py-3">
-                No more polls available at the moment
-              </div>
-            ) : (
-              <button
-                onClick={handleNextPoll}
-                disabled={isLoadingNextPoll}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
-              >
-                {isLoadingNextPoll ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M3 12h18M3 6h18M3 18h18" />
-                  </svg>
-                )}
-                {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
-              </button>
-            )}
-          </div>
 
           {/* Create Your Own Poll Section */}
           <div className="mb-6">
