@@ -21,8 +21,11 @@ export const Polls: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'question',
-    defaultColumns: ['question', 'status', 'totalVotes', 'createdAt'],
+    defaultColumns: ['question', 'source', 'status', 'totalVotes', 'createdAt'],
     group: 'Content',
+    components: {
+      beforeList: ['@/collections/Polls/PollsListTabs'],
+    },
   },
   fields: [
     {
@@ -55,6 +58,33 @@ export const Polls: CollectionConfig = {
       admin: {
         description: 'Optional description shown with the poll',
       },
+    },
+    {
+      name: 'contentBlocks',
+      type: 'array',
+      label: 'Content Blocks',
+      maxRows: 4,
+      admin: {
+        description: 'Add up to 4 content blocks with title and content (displayed before voting options)',
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Block title (e.g., "Context", "The Tension")',
+          },
+        },
+        {
+          name: 'content',
+          type: 'textarea',
+          required: true,
+          admin: {
+            description: 'Block content (use line breaks for multiple lines)',
+          },
+        },
+      ],
     },
     {
       name: 'options',

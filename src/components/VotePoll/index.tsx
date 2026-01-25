@@ -621,6 +621,8 @@ export function VotePoll({ poll }: VotePollProps) {
                   </button>
                 )}
               </div>
+
+            
             </div>
           )}
         </div>
@@ -711,6 +713,38 @@ export function VotePoll({ poll }: VotePollProps) {
                 </button>
               </div>
 
+              {/* About This Poll - Content Blocks */}
+              {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
+                <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="font-semibold text-gray-900">About this POLL!</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <p className="text-gray-800 font-medium">{currentPoll.question}</p>
+                  </div>
+                  <div className="p-4">
+                    {currentPoll.contentBlocks.map((block, index) => (
+                      <div key={index}>
+                        {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                            {block.title}
+                          </h4>
+                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            {block.content}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Create Your Own Poll Section */}
               <div className="mt-6">
                 <h3 className="font-semibold text-gray-900 mb-3">
@@ -730,16 +764,35 @@ export function VotePoll({ poll }: VotePollProps) {
         </>
       ) : !showResults ? (
         <>
-          {/* Description if exists */}
-          {currentPoll.description && (
-            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-green-600">&#10024;</span>
-                <h3 className="font-semibold text-green-700">
-                  About This Poll
-                </h3>
+          {/* About This Poll - Content Blocks */}
+          {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
+            <div className="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="font-semibold text-gray-900">About this POLL!</span>
+                </div>
               </div>
-              <p className="text-gray-700 text-sm">{currentPoll.description}</p>
+              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <p className="text-gray-800 font-medium">{currentPoll.question}</p>
+              </div>
+              <div className="p-4">
+                {currentPoll.contentBlocks.map((block, index) => (
+                  <div key={index}>
+                    {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                        {block.title}
+                      </h4>
+                      <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                        {block.content}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -911,6 +964,38 @@ export function VotePoll({ poll }: VotePollProps) {
                   </span>
                 </button>
               </div>
+
+              {/* About This Poll - Content Blocks */}
+              {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
+                <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="font-semibold text-gray-900">About this POLL!</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <p className="text-gray-800 font-medium">{currentPoll.question}</p>
+                  </div>
+                  <div className="p-4">
+                    {currentPoll.contentBlocks.map((block, index) => (
+                      <div key={index}>
+                        {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
+                        <div>
+                          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                            {block.title}
+                          </h4>
+                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            {block.content}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
