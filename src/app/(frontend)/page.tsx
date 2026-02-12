@@ -5,17 +5,28 @@ import { getServerSideURL } from '@/utilities/getURL'
 const siteUrl = getServerSideURL()
 
 export const metadata: Metadata = {
-  title: 'PollWarehouse - Create a Yes/No Poll in Seconds',
+  title: 'Free Yes or No Poll Maker | Create & Vote on Real Life Polls - Pollwarehouse',
   description:
-    'Create simple, real-time polls anyone can answer - no accounts, no friction.',
+    'Create and vote on Yes/No polls about relationships, pets, and life decisions. See live results instantly. Free, no sign-up. Join thousands.',
+  keywords:
+    'yes no poll, poll maker, free poll creator, online voting, relationship polls, pet polls, identity polls, real-time poll results, anonymous voting',
+  robots: 'index, follow',
   alternates: {
     canonical: `${siteUrl}/`,
   },
   openGraph: {
-    title: 'PollWarehouse - Create a Yes/No Poll in Seconds',
+    title: 'Free Yes or No Poll Maker - Pollwarehouse',
     description:
-      'Create simple, real-time polls anyone can answer - no accounts, no friction.',
+      'See how many people feel exactly like you do. Vote Yes or No on real questions about relationships, pets, and life.',
+    type: 'website',
     url: `${siteUrl}/`,
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 }
 

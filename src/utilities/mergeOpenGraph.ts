@@ -3,7 +3,8 @@ import { getServerSideURL } from './getURL'
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
-  description: 'PollWarehouse - Create and share polls in seconds.',
+  description:
+    'Create and vote on Yes/No polls about relationships, pets, and life decisions. See live results instantly. Free, no sign-up. Join thousands.',
   images: [
     {
       url: `${getServerSideURL()}/og-image.jpg`,
@@ -11,8 +12,8 @@ const defaultOpenGraph: Metadata['openGraph'] = {
       height: 630,
     },
   ],
-  siteName: 'PollWarehouse',
-  title: 'PollWarehouse',
+  siteName: 'Pollwarehouse',
+  title: 'Free Yes or No Poll Maker - Pollwarehouse',
 }
 
 export const mergeOpenGraph = (og?: Metadata['openGraph']): Metadata['openGraph'] => {

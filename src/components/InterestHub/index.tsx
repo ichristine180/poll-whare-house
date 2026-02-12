@@ -37,12 +37,12 @@ export function InterestHub({
     if (search.trim()) {
       params.set('q', search.trim())
     }
-    router.push(`/interest/${category.slug}?${params.toString()}`)
+    router.push(`/categories/${category.slug}?${params.toString()}`)
   }
 
   const clearSearch = () => {
     setSearch('')
-    router.push(`/interest/${category.slug}`)
+    router.push(`/categories/${category.slug}`)
   }
 
   const handlePageChange = (page: number) => {
@@ -51,7 +51,7 @@ export function InterestHub({
       params.set('q', searchQuery)
     }
     params.set('page', page.toString())
-    router.push(`/interest/${category.slug}?${params.toString()}`)
+    router.push(`/categories/${category.slug}?${params.toString()}`)
   }
 
   const getPageNumbers = () => {
@@ -95,7 +95,7 @@ export function InterestHub({
           Home
         </Link>
         <ChevronRight className="w-4 h-4" />
-        <Link href="/interest" className="hover:text-gray-700">
+        <Link href="/categories" className="hover:text-gray-700">
           Interest
         </Link>
         <ChevronRight className="w-4 h-4" />
@@ -253,7 +253,7 @@ export function InterestHub({
       {/* Back to all categories */}
       <div className="text-center pt-4">
         <Link
-          href="/interest"
+          href="/categories"
           className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-medium"
         >
           <ChevronLeft className="w-4 h-4" />

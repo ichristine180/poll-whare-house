@@ -26,20 +26,40 @@ export default async function FrontendLayout({
       {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`,
-        name: "PollWarehouse",
+        name: "Pollwarehouse",
         url: siteUrl,
         description:
-          "Create simple, real-time polls anyone can answer - no accounts, no friction.",
+          "Free Yes or No poll maker platform for real-life questions about relationships, pets, identity, and personal decisions",
         foundingDate: "2025",
       },
       {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         url: siteUrl,
-        name: "PollWarehouse",
+        name: "Pollwarehouse",
+        description:
+          "Free Yes or No poll maker platform for real-life questions about relationships, pets, identity, and personal decisions",
         publisher: {
           "@id": `${siteUrl}/#organization`,
         },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${siteUrl}/search?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "Pollwarehouse Poll Maker",
+        applicationCategory: "BusinessApplication",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+        operatingSystem: "Web browser",
+        description:
+          "Free online Yes or No poll creation and voting platform",
       },
     ],
   };
@@ -53,6 +73,21 @@ export default async function FrontendLayout({
       <head>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google-site-verification" content="KAxv1TOcbF_XkuBkPxwdF8PA_-X_iAkjQhuQsgPX0pk" />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-7YLQS05DMH"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-7YLQS05DMH');
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

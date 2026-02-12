@@ -79,12 +79,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${category.title} Polls - PollWarehouse`,
     description: category.description || `Browse and vote on ${category.title} polls`,
     alternates: {
-      canonical: `${siteUrl}/interest/${slug}`,
+      canonical: `${siteUrl}/categories/${slug}`,
     },
     openGraph: {
       title: `${category.title} Polls - PollWarehouse`,
       description: category.description || `Browse and vote on ${category.title} polls`,
-      url: `${siteUrl}/interest/${slug}`,
+      url: `${siteUrl}/categories/${slug}`,
       images: categoryImage?.url ? [{ url: categoryImage.url }] : undefined,
     },
   }

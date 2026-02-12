@@ -35,12 +35,12 @@ export function InterestHubPage({
     if (search.trim()) {
       params.set('q', search.trim())
     }
-    router.push(`/interest?${params.toString()}`)
+    router.push(`/categories?${params.toString()}`)
   }
 
   const clearSearch = () => {
     setSearch('')
-    router.push('/interest')
+    router.push('/categories')
   }
 
   const handlePageChange = (page: number) => {
@@ -49,7 +49,7 @@ export function InterestHubPage({
       params.set('q', initialSearch)
     }
     params.set('page', page.toString())
-    router.push(`/interest?${params.toString()}`)
+    router.push(`/categories?${params.toString()}`)
   }
 
   const getPageNumbers = () => {
@@ -158,7 +158,7 @@ export function InterestHubPage({
             return (
               <Link
                 key={category.id}
-                href={`/interest/${category.slug}`}
+                href={`/categories/${category.slug}`}
                 className="relative aspect-[4/3] rounded-lg overflow-hidden group"
               >
                 {categoryImage?.url ? (

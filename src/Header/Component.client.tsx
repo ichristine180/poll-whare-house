@@ -56,14 +56,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
                 <Image
                   src={data.logo.image.url || ""}
                   alt={data.logo.image.alt || "AskGeopolitics logo"}
-                  width={30}
-                  height={30}
-                  className="object-contain rounded-full"
+                  width={50}
+                  height={50}
+                  // className="object-contain rounded-full"
                   priority
                 />
               )}
               <Image
-                src="/logo-text.jpg"
+                src="/logo-text.png"
                 alt="PollWarehouse.com"
                 width={180}
                 height={30}

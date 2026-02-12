@@ -90,7 +90,7 @@ export async function HomePage() {
       {/* Interest Section - Polls about Culture */}
       <section>
         <Link
-          href="/interest"
+          href="/categories"
           className="inline-flex items-center gap-2 border-b-2 border-indigo-600 pb-1 mb-4 hover:opacity-80 transition-opacity"
         >
           <TrendingUp className="w-4 h-4 text-indigo-600" />
@@ -102,7 +102,7 @@ export async function HomePage() {
               return (
                 <Link
                   key={category.id}
-                  href={`/interest/${category.slug}`}
+                  href={`/categories/${category.slug}`}
                   className="relative aspect-[4/3] rounded-lg overflow-hidden group"
                 >
                   {categoryImage?.url ? (
