@@ -14,7 +14,7 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug'],
+    defaultColumns: ['title', 'slug', 'isActive'],
     group: 'Content',
   },
   fields: [
@@ -22,6 +22,15 @@ export const Categories: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'isActive',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Only active categories are shown on the public site',
+      },
     },
     {
       name: 'description',

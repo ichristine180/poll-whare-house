@@ -6,20 +6,19 @@ import { TrendingUp, Share2 } from "lucide-react";
 import { PollCard } from "@/components/PollCard";
 import type { Poll, Category, Media } from "@/payload-types";
 
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 async function getPolls() {
   const payload = await getPayloadHMR({ config: configPromise });
 
-  const [popularPolls, recentPolls, categories] = await Promise.all([
-    payload.find({
-      collection: "polls",
-      where: {
-        status: { equals: "active" },
-        popular: { equals: true },
-        or: [{ source: { equals: "admin" } }, { source: { exists: false } }],
-      },
-      sort: "-createdAt",
-      limit: 8,
-    }),
+  const [recentPolls, categories] = await Promise.all([
     payload.find({
       collection: "polls",
       where: {
@@ -32,15 +31,56 @@ async function getPolls() {
     }),
     payload.find({
       collection: "categories",
-      limit: 12,
+      where: {
+        or: [
+          { isActive: { equals: true } },
+          { isActive: { exists: false } },
+        ],
+      },
+      limit: 100,
       depth: 1,
     }),
   ]);
 
+  // For each category, fetch top polls by votes and randomly pick 2-3
+  const categoryPolls = await Promise.all(
+    categories.docs.map(async (category) => {
+      const topPolls = await payload.find({
+        collection: "polls",
+        where: {
+          status: { equals: "active" },
+          category: { equals: category.id },
+        },
+        sort: "-totalVotes",
+        limit: 10,
+        depth: 1,
+      });
+
+      const pickCount = Math.min(
+        topPolls.docs.length,
+        Math.floor(Math.random() * 2) + 2, // randomly 2 or 3
+      );
+
+      return {
+        category,
+        polls: shuffleArray(topPolls.docs).slice(0, pickCount) as Poll[],
+        pollCount: topPolls.totalDocs,
+      };
+    })
+  );
+
+  // Build popular polls: shuffle the per-category picks, flatten, cap at 8
+  const popularPolls = shuffleArray(categoryPolls.flatMap((c) => c.polls)).slice(0, 8);
+
+  // Sort categories by poll count (most polls first)
+  const categoriesWithCounts = categoryPolls
+    .map(({ category, pollCount }) => ({ ...category, pollCount }))
+    .sort((a, b) => b.pollCount - a.pollCount);
+
   return {
-    popularPolls: popularPolls.docs as Poll[],
+    popularPolls,
     recentPolls: recentPolls.docs as Poll[],
-    categories: categories.docs as Category[],
+    categories: categoriesWithCounts as Category[],
   };
 }
 

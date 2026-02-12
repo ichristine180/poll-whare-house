@@ -1,4 +1,5 @@
 import { CreatePollForm } from '@/components/CreatePoll'
+import { RecentPolls } from '@/components/RecentPolls'
 import { SubscribeBox } from '@/components/SubscribeBox'
 import type { Metadata } from 'next'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -23,6 +24,7 @@ export default function CreatePage() {
         </p>
       </div>
       <CreatePollForm />
+      <RecentPolls />
       <SubscribeBox />
     </div>
   )

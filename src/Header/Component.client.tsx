@@ -53,21 +53,24 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
               className="flex items-center gap-2 text-white hover:opacity-90 transition-opacity"
             >
               {data.logo?.image && typeof data.logo.image !== "string" && (
-                <Image
-                  src={data.logo.image.url || ""}
-                  alt={data.logo.image.alt || "AskGeopolitics logo"}
-                  width={50}
-                  height={50}
-                  // className="object-contain rounded-full"
-                  priority
-                />
+                <div className="bg-white rounded-full w-10 h-10 overflow-hidden">
+                  <Image
+                    src={data.logo.image.url || ""}
+                    alt={data.logo.image.alt || "AskGeopolitics logo"}
+                    width={50}
+                    height={50}
+                    priority
+                   className="w-full h-full object-cover scale-[1.28]"
+
+                  />
+                </div>
               )}
               <Image
                 src="/logo-text.png"
                 alt="PollWarehouse.com"
                 width={180}
                 height={30}
-                className="object-contain rounded-lg"
+                className="object-contain"
                 priority
               />
             </Link>

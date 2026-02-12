@@ -14,7 +14,12 @@ interface PageProps {
 async function getCategories(page: number = 1, search?: string) {
   const payload = await getPayload({ config: configPromise })
 
-  const where: any = {}
+  const where: any = {
+    or: [
+      { isActive: { equals: true } },
+      { isActive: { exists: false } },
+    ],
+  }
   if (search && search.trim()) {
     where.title = { contains: search.trim() }
   }
@@ -22,18 +27,41 @@ async function getCategories(page: number = 1, search?: string) {
   const categories = await payload.find({
     collection: 'categories',
     where,
-    limit: 12,
-    page,
+    limit: 100,
+    page: 1,
     depth: 1,
   })
 
+  // Sort by poll count (most polls first)
+  const categoriesWithCounts = await Promise.all(
+    categories.docs.map(async (category) => {
+      const pollCount = await payload.count({
+        collection: 'polls',
+        where: {
+          status: { equals: 'active' },
+          category: { equals: category.id },
+        },
+      })
+      return { ...category, pollCount: pollCount.totalDocs }
+    })
+  )
+
+  categoriesWithCounts.sort((a, b) => b.pollCount - a.pollCount)
+
+  // Manual pagination after sorting
+  const limit = 12
+  const start = (page - 1) * limit
+  const paginated = categoriesWithCounts.slice(start, start + limit)
+  const totalDocs = categoriesWithCounts.length
+  const totalPages = Math.ceil(totalDocs / limit)
+
   return {
-    categories: categories.docs as Category[],
-    totalPages: categories.totalPages,
-    totalDocs: categories.totalDocs,
-    currentPage: categories.page || 1,
-    hasNextPage: categories.hasNextPage,
-    hasPrevPage: categories.hasPrevPage,
+    categories: paginated as Category[],
+    totalPages,
+    totalDocs,
+    currentPage: page,
+    hasNextPage: page < totalPages,
+    hasPrevPage: page > 1,
   }
 }
 

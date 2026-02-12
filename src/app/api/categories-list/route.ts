@@ -8,11 +8,36 @@ export async function GET() {
 
     const categories = await payload.find({
       collection: 'categories',
-      limit: 12,
+      where: {
+        or: [
+          { isActive: { equals: true } },
+          { isActive: { exists: false } },
+        ],
+      },
+      limit: 100,
       depth: 1,
     })
 
-    return NextResponse.json(categories)
+    // Sort by poll count
+    const categoriesWithCounts = await Promise.all(
+      categories.docs.map(async (category) => {
+        const pollCount = await payload.count({
+          collection: 'polls',
+          where: {
+            status: { equals: 'active' },
+            category: { equals: category.id },
+          },
+        })
+        return { ...category, pollCount: pollCount.totalDocs }
+      })
+    )
+
+    categoriesWithCounts.sort((a, b) => b.pollCount - a.pollCount)
+
+    return NextResponse.json({
+      ...categories,
+      docs: categoriesWithCounts,
+    })
   } catch (error: any) {
     console.error('Error fetching categories:', error)
     return NextResponse.json(

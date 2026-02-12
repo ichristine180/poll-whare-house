@@ -91,14 +91,14 @@ export function SubscribeBox() {
           </p>
         )}
 
-        <div className="flex items-center justify-center gap-6 mt-3 text-xs">
+        {/* <div className="flex items-center justify-center gap-6 mt-3 text-xs">
           <Link href="/privacy-policy" className="text-gray-600 hover:text-gray-900">
             Privacy Policy
           </Link>
           <Link href="/terms-of-service" className="text-gray-600 hover:text-gray-900">
             Terms Of Service
           </Link>
-        </div>
+        </div> */}
       </form>
     </div>
   )
