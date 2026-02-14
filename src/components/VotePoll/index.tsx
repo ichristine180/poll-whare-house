@@ -232,6 +232,15 @@ export function VotePoll({ poll }: VotePollProps) {
   // Get tags from poll
   const tags = currentPoll.tags?.map((t) => t.tag).filter(Boolean) || [];
 
+  // Pillar config
+  const pillarConfig: Record<string, { label: string; color: string; bg: string }> = {
+    belief: { label: 'Belief', color: 'text-purple-700', bg: 'bg-purple-50 hover:bg-purple-100' },
+    boundary: { label: 'Boundary', color: 'text-amber-700', bg: 'bg-amber-50 hover:bg-amber-100' },
+    desire: { label: 'Desire', color: 'text-rose-700', bg: 'bg-rose-50 hover:bg-rose-100' },
+    duty: { label: 'Duty', color: 'text-blue-700', bg: 'bg-blue-50 hover:bg-blue-100' },
+  };
+  const pillar = currentPoll.pillar ? pillarConfig[currentPoll.pillar] : null;
+
   const checkVoteStatus = useCallback(async () => {
     try {
       const res = await fetch(`/api/poll-vote/${currentPoll.id}`);
@@ -412,19 +421,30 @@ export function VotePoll({ poll }: VotePollProps) {
           Home
         </Link>
         <ChevronRight className="w-4 h-4" />
+        {pillar && currentPoll.pillar ? (
+          <>
+            <Link href={`/pillars/${currentPoll.pillar}`} className={`hover:text-gray-700`}>
+              {pillar.label}
+            </Link>
+            <ChevronRight className="w-4 h-4" />
+          </>
+        ) : null}
         <span className="text-indigo-600">Poll</span>
       </nav>
 
-      {/* Tags */}
-      {tags.length > 0 && (
+      {/* Pillar Badge */}
+      {pillar && currentPoll.pillar && (
         <div className="mb-3">
-          <span className="text-gray-500 text-[14px]">Tags: </span>
-          {tags.map((tag, index) => (
-            <span key={index} className="text-indigo-600 text-[14px]">
-              {tag}
-              {index < tags.length - 1 ? ", " : ""}
-            </span>
-          ))}
+          <Link
+            href={`/pillars/${currentPoll.pillar}`}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-semibold ${pillar.color} ${pillar.bg} transition-colors`}
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            {pillar.label}
+          </Link>
         </div>
       )}
 
@@ -1014,6 +1034,27 @@ export function VotePoll({ poll }: VotePollProps) {
             </Link>
           </div>
         </>
+      )}
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div className="pt-4 border-t border-gray-100">
+          <div className="flex flex-wrap items-center gap-2">
+            <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+              <line x1="7" y1="7" x2="7.01" y2="7" />
+            </svg>
+            {tags.map((tag, index) => (
+              <Link
+                key={index}
+                href={`/tags/${encodeURIComponent(tag!.toLowerCase())}`}
+                className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

@@ -142,6 +142,20 @@ export const Polls: CollectionConfig = {
       },
     },
     {
+      name: 'pillar',
+      type: 'select',
+      options: [
+        { label: 'Belief', value: 'belief' },
+        { label: 'Boundary', value: 'boundary' },
+        { label: 'Desire', value: 'desire' },
+        { label: 'Duty', value: 'duty' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description: 'Content pillar this poll belongs to',
+      },
+    },
+    {
       name: 'pollAxis',
       type: 'relationship',
       relationTo: 'poll-axes',
