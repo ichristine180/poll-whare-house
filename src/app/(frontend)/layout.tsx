@@ -74,6 +74,7 @@ export default async function FrontendLayout({
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="google-site-verification" content="KAxv1TOcbF_XkuBkPxwdF8PA_-X_iAkjQhuQsgPX0pk" />
+        <meta name="msvalidate.01" content="5F42A0F74BCBB1FF8A1579C25EBC69B5" />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-7YLQS05DMH"
