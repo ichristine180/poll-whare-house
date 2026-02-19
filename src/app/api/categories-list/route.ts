@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 export async function GET() {
   try {
@@ -24,8 +25,10 @@ export async function GET() {
         const pollCount = await payload.count({
           collection: 'polls',
           where: {
-            status: { equals: 'active' },
-            category: { equals: category.id },
+            and: [
+              publishedPollFilter(),
+              { category: { equals: category.id } },
+            ],
           },
         })
         return { ...category, pollCount: pollCount.totalDocs }

@@ -21,25 +21,25 @@ export const FooterClient: React.FC<FooterClientProps> = ({ data }) => {
   const { navItems, socialMedia, copyrightText } = data
 
   return (
-  <footer className="w-full border-t border-gray-200 bg-gray-50 mt-6">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Navigation Links */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            {navItems?.map((item, index) => (
-              <Link
-                key={index}
-                href={item.url || '#'}
-                className="text-sm text-gray-600 hover:text-[#6D4AF9] transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+    <footer className="w-full mt-10">
+      <div className="mx-auto max-w-[600px] border-t-2 border-[#d1d7e3] px-4 py-5">
+        {/* Navigation Links */}
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+          {navItems?.map((item, index) => (
+            <Link
+              key={index}
+              href={item.url || '#'}
+              className="text-[15px] text-[#1e2a54] hover:underline"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
 
-          {/* Social Media */}
-          <div className="flex gap-4">
-            {socialMedia?.map((social, index) => {
+        {/* Social Media */}
+        {socialMedia && socialMedia.length > 0 && (
+          <div className="flex justify-center gap-4 mt-4">
+            {socialMedia.map((social, index) => {
               const Icon = socialIcons[social.platform || '']
               if (!Icon) return null
               return (
@@ -48,18 +48,18 @@ export const FooterClient: React.FC<FooterClientProps> = ({ data }) => {
                   href={social.url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-[#6D4AF9] transition-colors"
+                  className="text-[#1e2a54] hover:opacity-70 transition-opacity"
                 >
                   <Icon className="w-5 h-5" />
                 </a>
               )
             })}
           </div>
-        </div>
+        )}
 
         {/* Copyright */}
-        <div className="mt-6 text-center text-xs text-gray-500">
-          {copyrightText || 'Copyright © 2025 PollWarehouse. All rights reserved.'}
+        <div className="mt-4 text-center text-sm text-[#1e2a54]">
+          {copyrightText || '© Copyright 2025 - PollWarehouse. All Rights Reserved.'}
         </div>
       </div>
     </footer>

@@ -47,7 +47,7 @@ export function Subscribe() {
   }
 
   return (
-    <div className="bg-white min-h-[60vh] flex flex-col justify-center">
+    <div className="bg-white min-h-[60vh] flex flex-col">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8">
         <Link href="/" className="hover:text-gray-700">
@@ -58,7 +58,7 @@ export function Subscribe() {
       </nav>
 
       {/* Subscribe Form Section */}
-      <div className="bg-[#F9FAFB] rounded-lg p-8 max-w-lg mx-auto w-full">
+      <div className="bg-[#F9FAFB] rounded-lg p-8">
         <div className="text-center mb-6">
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center">
@@ -104,14 +104,14 @@ export function Subscribe() {
             </p>
           )}
 
-          {/* <div className="flex items-center justify-center gap-6 mt-4 text-xs">
-            <Link href="/privacy-policy" className="text-gray-600 hover:text-gray-900">
+          <div className="flex items-center justify-center gap-6 mt-4 text-xs">
+            <Link href="/" className="text-gray-600 hover:text-gray-900">
               Privacy Policy
             </Link>
-            <Link href="/terms-of-service" className="text-gray-600 hover:text-gray-900">
+            <Link href="/" className="text-gray-600 hover:text-gray-900">
               Terms Of Service
             </Link>
-          </div> */}
+          </div>
         </form>
       </div>
     </div>

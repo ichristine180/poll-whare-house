@@ -35,6 +35,9 @@ export const PollCard: React.FC<PollCardProps> = ({ poll }) => {
             </div>
           </div>
         )}
+        <span className="absolute bottom-1.5 right-1.5 bg-black/60 text-white text-xs font-medium px-1.5 py-0.5 rounded">
+          {poll.totalVotes ?? 0} votes
+        </span>
       </div>
       {/* Content */}
       <div className="p-1">

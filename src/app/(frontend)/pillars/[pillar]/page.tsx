@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { getServerSideURL } from '@/utilities/getURL'
 import type { Poll } from '@/payload-types'
 import { PillarHub } from '@/components/PillarHub'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 const PILLARS: Record<string, { label: string; description: string }> = {
   belief: {
@@ -37,7 +38,7 @@ async function getPollsByPillar(pillar: string, page: number = 1) {
     collection: 'polls',
     where: {
       and: [
-        { status: { equals: 'active' } },
+        publishedPollFilter(),
         { pillar: { equals: pillar } },
       ],
     },

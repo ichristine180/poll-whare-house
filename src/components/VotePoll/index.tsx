@@ -87,7 +87,7 @@ function ShareCard({
   });
 
   return (
-    <div className="w-full max-w-[600px] px-4 py-5 sm:px-8 sm:py-8 bg-indigo-50 rounded-sm">
+    <div className="w-full max-w-[600px] px-4 py-5 sm:px-8 sm:py-8 bg-indigo-50 rounded-2xl">
       {badge ? (
         <div className="text-center mb-5 sm:mb-8">
           <h1 className="text-[18px] sm:text-[24px] font-bold text-gray-900 leading-snug">
@@ -889,10 +889,10 @@ export function VotePoll({ poll }: VotePollProps) {
 
                 return (
                   <div key={index} className="relative">
-                    <div className="h-12 bg-gray-100 rounded-lg overflow-hidden">
+                    <div className="h-12 bg-gray-100 rounded-full">
                       <div
-                        className={`h-full ${barColor} transition-all duration-500`}
-                        style={{ width: `${option.percentage}%` }}
+                        className={`h-full ${barColor} rounded-full transition-all duration-500`}
+                        style={{ width: `${Math.max(option.percentage, 2)}%` }}
                       />
                       <div className="absolute inset-0 flex items-center justify-between px-4">
                         <span className="font-medium text-gray-900">

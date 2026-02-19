@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { getServerSideURL } from '@/utilities/getURL'
 import type { Poll, Category, Media } from '@/payload-types'
 import { InterestHub } from '@/components/InterestHub'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -32,13 +33,15 @@ async function getCategoryWithPolls(slug: string, search?: string, page: number 
 
   // Build query for polls
   const where: any = {
-    status: { equals: 'active' },
-    category: { equals: category.id },
+    and: [
+      publishedPollFilter(),
+      { category: { equals: category.id } },
+    ],
   }
 
   // Add search filter if provided
   if (search && search.trim()) {
-    where.question = { contains: search.trim() }
+    where.and.push({ question: { contains: search.trim() } })
   }
 
   // Get polls in this category

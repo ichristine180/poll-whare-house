@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,9 +9,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const excludeId = searchParams.get('exclude')
 
-    // Fetch all active polls excluding the current one
+    // Fetch all active/scheduled polls excluding the current one
     const where: any = {
-      status: { equals: 'active' },
+      ...publishedPollFilter(),
     }
 
     if (excludeId) {

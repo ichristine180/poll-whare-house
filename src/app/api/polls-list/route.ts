@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,9 +14,9 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || 'active'
     const category = searchParams.get('category')
 
-    const where: any = {
-      status: { equals: status },
-    }
+    const where: any = status === 'active'
+      ? { ...publishedPollFilter() }
+      : { status: { equals: status } }
 
     if (category) {
       where.category = { equals: category }

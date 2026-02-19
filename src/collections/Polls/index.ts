@@ -183,6 +183,7 @@ export const Polls: CollectionConfig = {
       defaultValue: 'active',
       options: [
         { label: 'Active', value: 'active' },
+        { label: 'Scheduled', value: 'scheduled' },
         { label: 'Closed', value: 'closed' },
         { label: 'Draft', value: 'draft' },
       ],
@@ -274,9 +275,16 @@ export const Polls: CollectionConfig = {
             if (siblingData.status === 'active' && !value) {
               return new Date()
             }
+            // Don't auto-set date for scheduled polls — they use the manually set publishedAt
             return value
           },
         ],
+      },
+      validate: (value, { siblingData }) => {
+        if ((siblingData as any)?.status === 'scheduled' && !value) {
+          return 'publishedAt is required when status is Scheduled'
+        }
+        return true
       },
     },
     {

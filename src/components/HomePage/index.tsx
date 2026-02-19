@@ -5,6 +5,7 @@ import Image from "next/image";
 import { TrendingUp, Share2 } from "lucide-react";
 import { PollCard } from "@/components/PollCard";
 import type { Poll, Category, Media } from "@/payload-types";
+import { publishedPollFilter } from "@/utilities/pollFilters";
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -22,8 +23,10 @@ async function getPolls() {
     payload.find({
       collection: "polls",
       where: {
-        status: { equals: "active" },
-        or: [{ source: { equals: "admin" } }, { source: { exists: false } }],
+        and: [
+          publishedPollFilter(),
+          { or: [{ source: { equals: "admin" } }, { source: { exists: false } }] },
+        ],
       },
       sort: "-createdAt",
       limit: 8,
@@ -42,28 +45,25 @@ async function getPolls() {
     }),
   ]);
 
-  // For each category, fetch top polls by votes and randomly pick 2-3
+  // For each category, fetch top polls by votes
   const categoryPolls = await Promise.all(
     categories.docs.map(async (category) => {
       const topPolls = await payload.find({
         collection: "polls",
         where: {
-          status: { equals: "active" },
-          category: { equals: category.id },
+          and: [
+            publishedPollFilter(),
+            { category: { equals: category.id } },
+          ],
         },
         sort: "-totalVotes",
         limit: 10,
         depth: 1,
       });
 
-      const pickCount = Math.min(
-        topPolls.docs.length,
-        Math.floor(Math.random() * 2) + 2, // randomly 2 or 3
-      );
-
       return {
         category,
-        polls: shuffleArray(topPolls.docs).slice(0, pickCount) as Poll[],
+        polls: shuffleArray(topPolls.docs) as Poll[],
         pollCount: topPolls.totalDocs,
       };
     })
@@ -185,267 +185,275 @@ export async function HomePage() {
 
       {/* Content Section */}
       <div className="mt-12 space-y-8 text-gray-700">
-        {/* Intro */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Pollwarehouse – Online Yes or No Poll Maker
-          </h2>
-          <p className="text-base leading-relaxed">
-            <strong>Pollwarehouse</strong> is an online Yes or No polling platform that lets users create polls, vote on real questions, and view live voting statistics. The platform covers topics across life, values, identity, ethics, lifestyle, and personal decisions. Pollwarehouse is <strong>free to use</strong>, requires no software installation, and no sign-up. It makes creating polls fast, simple, and accessible from any device, while allowing users to see real-time vote results and share opinions across social networks.
-          </p>
-        </div>
 
         {/* What Is Pollwarehouse */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            What Is Pollwarehouse?
+        <section id="what-is-pollwarehouse">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Free Yes or No Poll Maker
           </h2>
           <p className="text-base leading-relaxed mb-3">
-            Pollwarehouse is a web-based poll maker tool designed for creating and participating in Yes or No polls. It allows users to:
+            <strong>Pollwarehouse</strong> is an online Yes or No polling platform built for real human questions, not dry surveys.
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Create a poll instantly</li>
-            <li>Vote on existing questions</li>
-            <li>View live poll results and statistics</li>
-            <li>Share opinions through comments and social platforms</li>
-          </ul>
-          <p className="text-base leading-relaxed mt-3">
-            You don&apos;t need to install any software or create an account to use Pollwarehouse. Everything works directly in your web browser.
-          </p>
-        </div>
-
-        {/* Advantages */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Advantages of Using Pollwarehouse for Creating Polls
-          </h2>
           <p className="text-base leading-relaxed mb-3">
-            Using Pollwarehouse comes with several benefits:
+            From relationships and pets to values, ethics, lifestyle, and personal decisions, Pollwarehouse turns messy, private thoughts into simple Yes/No polls people can respond to in seconds.
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li><strong>Free to use</strong> – No registration or payment required</li>
-            <li><strong>Simple poll creation</strong> – Create Yes or No polls in seconds</li>
-            <li><strong>Live voting results</strong> – See statistics update in real time</li>
-            <li><strong>User-friendly interface</strong> – Easy to use for all audiences</li>
-            <li><strong>Unlimited participation</strong> – Vote and explore as many polls as you like</li>
-            <li><strong>Social sharing</strong> – Share polls and results across social networks</li>
-          </ul>
-          <p className="text-base leading-relaxed mt-3">
-            Pollwarehouse is designed to remove friction from polling while keeping results transparent and accessible.
+          <p className="text-base leading-relaxed">
+            Vote on existing polls, create your own, and see live results without accounts, logins, or friction.
           </p>
-        </div>
+        </section>
 
-        {/* How to Use */}
-        <div>
+        {/* Why Use Pollwarehouse */}
+        <section id="why-use-pollwarehouse">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            How to Use Pollwarehouse to Create or Vote on a Poll
-          </h2>
-          <p className="text-base leading-relaxed mb-4">
-            Creating or participating in a poll on Pollwarehouse is quick and straightforward.
-          </p>
-
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Simple Steps to Create a Poll
-          </h3>
-          <ol className="list-decimal list-inside space-y-1 ml-2 mb-4">
-            <li>Visit the Pollwarehouse website</li>
-            <li>Write your Yes or No question</li>
-            <li>Publish the poll instantly</li>
-            <li>Share the poll and track live results</li>
-          </ol>
-
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Simple Steps to Vote on a Poll
-          </h3>
-          <ol className="list-decimal list-inside space-y-1 ml-2">
-            <li>Open any poll page</li>
-            <li>Choose Yes or No</li>
-            <li>View live vote statistics</li>
-            <li>Read or share opinions in the comments</li>
-          </ol>
-          <p className="text-base leading-relaxed mt-3">
-            No account is required at any step.
-          </p>
-        </div>
-
-        {/* Features */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Features of the Pollwarehouse Online Poll Maker
+            Why People Use Pollwarehouse
           </h2>
 
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            User-Friendly Interface
+            Feel less alone in your experience
           </h3>
           <p className="text-base leading-relaxed mb-4">
-            Pollwarehouse is built with simplicity in mind. The clean interface allows users to create, vote, and explore polls without confusion or learning curves.
+            See how many people quietly share the same guilt, doubts, and relief you do when you vote on a poll.
           </p>
 
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            No Software Installation Required
+            Turn your truth into a poll
           </h3>
           <p className="text-base leading-relaxed mb-4">
-            Pollwarehouse runs entirely in your browser. There&apos;s no need to download apps, plugins, or extensions.
+            Turn the question stuck in your head into a one-click Yes/No poll that anyone can answer and share.
           </p>
 
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Yes or No Poll Format
+            Get real-time insight
           </h3>
           <p className="text-base leading-relaxed mb-4">
-            All polls use a binary Yes or No format, making decisions clear, fast, and comparable across users.
+            Watch live vote percentages update as more people answer, so you can compare your reality with thousands of others.
           </p>
 
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Live Poll Results and Statistics
+            Share anywhere
           </h3>
           <p className="text-base leading-relaxed">
-            Vote results update instantly, allowing users to see how opinions change over time.
+            Every poll has a unique link you can post on social media, send to friends, or share in communities.
           </p>
-        </div>
+        </section>
 
-        {/* Categories */}
-        <div>
+        {/* How It Works */}
+        <section id="how-it-works">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Categories and Topics Available on Pollwarehouse
+            How Pollwarehouse Works
+          </h2>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            1. Explore Yes/No polls
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Browse polls about love, breakups, family tension, pet guilt, identity, career, and more. Each poll is a clear Yes/No statement you can react to instantly.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            2. Vote with one tap
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Choose Yes or No based on how you truly feel. No sign-up, no forms, no profile creation.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            3. See live voting statistics
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            As soon as you vote, you see real-time results: total votes, percentages, and how other people answered.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            4. Create your own poll
+          </h3>
+          <p className="text-base leading-relaxed">
+            Have a question no one around you gets? Write a Yes/No statement, publish it in seconds, and watch votes and shares roll in.
+          </p>
+        </section>
+
+        {/* Poll Maker Tool */}
+        <section id="poll-maker-tool">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">
+            Free Yes or No Poll Maker
           </h2>
           <p className="text-base leading-relaxed mb-3">
-            Pollwarehouse hosts polls across multiple categories, including:
+            Pollwarehouse includes a simple, free poll-creation tool anyone can use:
           </p>
           <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Life decisions</li>
-            <li>Personal values</li>
-            <li>Identity and beliefs</li>
-            <li>Ethics and morality</li>
-            <li>Lifestyle and relationships</li>
-            <li>Social and cultural topics</li>
+            <li>Write your Yes or No question</li>
+            <li>Publish instantly—no registration needed</li>
+            <li>Share the link across social networks and messaging apps</li>
+            <li>Track live results from any device</li>
           </ul>
-          <p className="text-base leading-relaxed mt-3">
-            Users can explore polls based on their interests, vote, and share them with friends, family, or online communities.
-          </p>
-        </div>
+        </section>
 
-        {/* Compatibility */}
-        <div>
+        {/* Key Features */}
+        <section id="features">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Pollwarehouse Compatibility Across Devices
+            Key Features
           </h2>
-          <p className="text-base leading-relaxed mb-3">
-            Pollwarehouse works on:
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Yes/No format only
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Every poll uses a binary Yes or No answer, making decisions clear, fast, and easy to compare.
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Desktop computers</li>
-            <li>Laptops</li>
-            <li>Tablets</li>
-            <li>Smartphones</li>
-          </ul>
-          <p className="text-base leading-relaxed mt-3">
-            It is compatible with all modern web browsers, including Chrome, Firefox, Safari, and Edge, and works on Windows, macOS, Android, and iOS devices.
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Live poll results and statistics
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Results update instantly, so each visitor sees current vote totals and percentages in real time.
           </p>
-        </div>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            No account, no software, no friction
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Pollwarehouse runs entirely in the browser. There&apos;s no app to install and no registration required.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Mobile-first, works on any device
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            Polls load quickly and work on desktop, laptop, tablet, and smartphone across all major browsers.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Anonymous participation
+          </h3>
+          <p className="text-base leading-relaxed mb-4">
+            People can vote honestly because results are aggregated and individual voters are never shown.
+          </p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Shareable polls
+          </h3>
+          <p className="text-base leading-relaxed">
+            Every poll comes with a unique URL and social-sharing options.
+          </p>
+        </section>
 
         {/* Free and Safe */}
-        <div>
+        <section id="free-and-safe">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Is Pollwarehouse Free and Safe to Use?
+            Is Pollwarehouse Free and Safe?
           </h2>
           <p className="text-base leading-relaxed mb-3">
-            Yes. Pollwarehouse is completely free and does not require sign-up or personal information. Because no registration is required:
+            Yes. Pollwarehouse is completely free to use and does not require sign-up or personal data.
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>User data exposure is minimized</li>
-            <li>Participation is fast and anonymous</li>
-            <li>Privacy risks are reduced</li>
-          </ul>
-          <p className="text-base leading-relaxed mt-3">
-            Pollwarehouse focuses on open participation while keeping the experience simple and secure.
-          </p>
-        </div>
-
-        {/* Speed and Performance */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Speed and Performance of Pollwarehouse
-          </h2>
           <p className="text-base leading-relaxed mb-3">
-            Pollwarehouse is optimized for:
+            Because participation is anonymous:
           </p>
           <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Fast poll creation</li>
-            <li>Instant voting</li>
-            <li>Real-time result updates</li>
+            <li>Users can answer honestly without fear of judgment</li>
+            <li>Data exposure and privacy risks are minimized</li>
+            <li>Anyone can create or vote on polls in seconds from any device</li>
           </ul>
-          <p className="text-base leading-relaxed mt-3">
-            Pages load quickly, and poll results update without delays, even as participation grows.
-          </p>
-        </div>
-
-        {/* Why Use */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Why Use Pollwarehouse?
-          </h2>
-          <p className="text-base leading-relaxed mb-3">
-            Pollwarehouse helps users:
-          </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Express opinions clearly</li>
-            <li>Compare their views with others</li>
-            <li>Explore real questions people care about</li>
-            <li>Participate without friction or commitment</li>
-          </ul>
-          <p className="text-base leading-relaxed mt-3">
-            It turns simple Yes or No questions into shared public insight.
-          </p>
-        </div>
+        </section>
 
         {/* FAQ Section */}
-        <div>
+        <section id="faq" itemScope itemType="https://schema.org/FAQPage">
           <h2 className="text-xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions (FAQ)
+            Frequently Asked Questions
           </h2>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            What is Pollwarehouse?
-          </h3>
-          <p className="text-base leading-relaxed mb-4">
-            Pollwarehouse is an online Yes or No poll maker that allows users to create polls, vote, and view live results without signing up.
-          </p>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              What is Pollwarehouse?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                Pollwarehouse is a free online Yes or No poll maker and voting platform focused on real-life questions about relationships, pets, identity, lifestyle, and personal decisions.
+              </p>
+            </div>
+          </div>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Is Pollwarehouse free to use?
-          </h3>
-          <p className="text-base leading-relaxed mb-4">
-            Yes. Pollwarehouse is completely free and does not require registration.
-          </p>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              Do I need an account to vote or create polls?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                No. You can create and vote on polls without creating an account or sharing personal information.
+              </p>
+            </div>
+          </div>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Do I need to install any software?
-          </h3>
-          <p className="text-base leading-relaxed mb-4">
-            No. Pollwarehouse works directly in your web browser.
-          </p>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              Is Pollwarehouse really free to use?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                Yes. There are no subscription fees, paywalls, or hidden costs.
+              </p>
+            </div>
+          </div>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Can I vote on polls without creating an account?
-          </h3>
-          <p className="text-base leading-relaxed mb-4">
-            Yes. Voting is open and does not require sign-up.
-          </p>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              Can I create my own Yes or No poll?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                Yes. Anyone can write a Yes/No question, publish it instantly, and share the poll link to gather votes and see live results.
+              </p>
+            </div>
+          </div>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            What type of polls can I create?
-          </h3>
-          <p className="text-base leading-relaxed mb-4">
-            Pollwarehouse supports Yes or No questions across many topics, including life, ethics, values, lifestyle, and personal decisions.
-          </p>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              Can I share Pollwarehouse polls on social media?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                Yes. Each poll has a shareable link you can post on platforms like Facebook, Twitter, WhatsApp, or in private groups and chats.
+              </p>
+            </div>
+          </div>
 
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Can I share my polls?
-          </h3>
-          <p className="text-base leading-relaxed">
-            Yes. Polls can be shared across social networks and messaging platforms.
-          </p>
-        </div>
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              Is my vote anonymous?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed mb-4" itemProp="text">
+                Yes. Pollwarehouse only shows aggregated vote counts and percentages. Individual votes are never exposed.
+              </p>
+            </div>
+          </div>
+
+          <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2" itemProp="name">
+              What kind of polls are on Pollwarehouse?
+            </h3>
+            <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
+              <p className="text-base leading-relaxed" itemProp="text">
+                Polls about how people really feel—guilt, doubt, loyalty, love, loss, and life choices. Questions you might not ask out loud but want to know if others feel the same way.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Closing CTA */}
+        <section id="cta-closing" className="text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Ready to see how many people feel exactly like you do?
+          </h2>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link href="/categories" className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+              Browse Live Polls
+            </Link>
+            <Link href="/create" className="inline-block px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors">
+              Create Your Own Poll
+            </Link>
+          </div>
+        </section>
+
       </div>
 
     </div>

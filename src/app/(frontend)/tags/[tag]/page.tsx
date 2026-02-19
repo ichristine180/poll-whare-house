@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { getServerSideURL } from '@/utilities/getURL'
 import type { Poll } from '@/payload-types'
 import { TagHub } from '@/components/TagHub'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 interface PageProps {
   params: Promise<{ tag: string }>
@@ -18,7 +19,7 @@ async function getPollsByTag(tag: string, page: number = 1) {
     collection: 'polls',
     where: {
       and: [
-        { status: { equals: 'active' } },
+        publishedPollFilter(),
         { 'tags.tag': { equals: decodedTag } },
       ],
     },

@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { getServerSideURL } from '@/utilities/getURL'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getServerSideURL()
@@ -38,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all active polls
   const polls = await payload.find({
     collection: 'polls',
-    where: { status: { equals: 'active' } },
+    where: publishedPollFilter(),
     limit: 10000,
     depth: 0,
     select: {
@@ -81,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Collect unique tags from polls
   const allPolls = await payload.find({
     collection: 'polls',
-    where: { status: { equals: 'active' } },
+    where: publishedPollFilter(),
     limit: 10000,
     depth: 0,
     select: {

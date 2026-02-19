@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import type { Category } from '@/payload-types'
 import { InterestHubPage } from '@/components/InterestHubPage'
 import { getServerSideURL } from '@/utilities/getURL'
+import { publishedPollFilter } from '@/utilities/pollFilters'
 
 const siteUrl = getServerSideURL()
 
@@ -38,8 +39,10 @@ async function getCategories(page: number = 1, search?: string) {
       const pollCount = await payload.count({
         collection: 'polls',
         where: {
-          status: { equals: 'active' },
-          category: { equals: category.id },
+          and: [
+            publishedPollFilter(),
+            { category: { equals: category.id } },
+          ],
         },
       })
       return { ...category, pollCount: pollCount.totalDocs }

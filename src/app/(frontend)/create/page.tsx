@@ -25,7 +25,7 @@ export default function CreatePage() {
       </div>
       <CreatePollForm />
       <RecentPolls />
-      <SubscribeBox />
+      {/* <SubscribeBox /> */}
     </div>
   )
 }
