@@ -415,22 +415,41 @@ export function VotePoll({ poll }: VotePollProps) {
 
   return (
     <div className="space-y-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-        <Link href="/" className="hover:text-gray-700">
-          Home
-        </Link>
-        <ChevronRight className="w-4 h-4" />
-        {pillar && currentPoll.pillar ? (
-          <>
-            <Link href={`/pillars/${currentPoll.pillar}`} className={`hover:text-gray-700`}>
-              {pillar.label}
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-          </>
-        ) : null}
-        <span className="text-indigo-600">Poll</span>
-      </nav>
+      {/* Breadcrumb + Tags Row */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+        <nav className="flex items-center gap-2 text-sm text-gray-500">
+          <Link href="/" className="hover:text-gray-700">
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          {pillar && currentPoll.pillar ? (
+            <>
+              <Link href={`/pillars/${currentPoll.pillar}`} className={`hover:text-gray-700`}>
+                {pillar.label}
+              </Link>
+              <ChevronRight className="w-4 h-4" />
+            </>
+          ) : null}
+          <span className="text-indigo-600">Poll</span>
+        </nav>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+              <line x1="7" y1="7" x2="7.01" y2="7" />
+            </svg>
+            {tags.map((tag, index) => (
+              <Link
+                key={index}
+                href={`/tags/${encodeURIComponent(tag!.toLowerCase())}`}
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Pillar Badge */}
       {pillar && currentPoll.pillar && (
@@ -662,35 +681,6 @@ export function VotePoll({ poll }: VotePollProps) {
           {/* Share Section - Before Voting */}
           {!currentPoll.pollSettings?.hideShareOptions && (
             <div className="mt-9">
-              <div className="flex justify-center">
-                {noMorePolls ? (
-                  <div className="text-center text-gray-600 py-3 mb-6">
-                    No more polls available at the moment
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleNextPoll}
-                    disabled={isLoadingNextPoll}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors mb-6"
-                  >
-                    {isLoadingNextPoll ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M3 12h18M3 6h18M3 18h18" />
-                      </svg>
-                    )}
-                    {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
-                  </button>
-                )}
-              </div>
-
               <h3 className="font-semibold text-gray-900 mb-3">
                 Tell Your Friends About This Poll
               </h3>
@@ -733,52 +723,6 @@ export function VotePoll({ poll }: VotePollProps) {
                 </button>
               </div>
 
-              {/* About This Poll - Content Blocks */}
-              {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
-                <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span className="font-semibold text-gray-900">About this POLL!</span>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <p className="text-gray-800 font-medium">{currentPoll.question}</p>
-                  </div>
-                  <div className="p-4">
-                    {currentPoll.contentBlocks.map((block, index) => (
-                      <div key={index}>
-                        {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                            {block.title}
-                          </h4>
-                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            {block.content}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Create Your Own Poll Section */}
-              <div className="mt-6">
-                <h3 className="font-semibold text-gray-900 mb-3">
-                  create your own poll
-                </h3>
-                <Link
-                  href="/create"
-                  className="block bg-indigo-50 rounded-lg py-4 px-6 text-center hover:bg-indigo-100 transition-colors"
-                >
-                  <p className="text-gray-800 font-medium">
-                    No Registration or signup Required Free
-                  </p>
-                </Link>
-              </div>
             </div>
           )}
         </>
@@ -806,9 +750,22 @@ export function VotePoll({ poll }: VotePollProps) {
                       <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
                         {block.title}
                       </h4>
-                      <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                        {block.content}
-                      </div>
+                      {(block.image as Media | null)?.url && (
+                        <div className="mb-3 rounded-lg overflow-hidden">
+                          <Image
+                            src={(block.image as Media).url!}
+                            alt={block.title || ''}
+                            width={(block.image as Media).width || 800}
+                            height={(block.image as Media).height || 450}
+                            className="w-full h-auto object-cover"
+                          />
+                        </div>
+                      )}
+                      {block.content && (
+                        <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                          {block.content}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -1036,26 +993,6 @@ export function VotePoll({ poll }: VotePollProps) {
         </>
       )}
 
-      {/* Tags */}
-      {tags.length > 0 && (
-        <div className="pt-4 border-t border-gray-100">
-          <div className="flex flex-wrap items-center gap-2">
-            <svg className="w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-              <line x1="7" y1="7" x2="7.01" y2="7" />
-            </svg>
-            {tags.map((tag, index) => (
-              <Link
-                key={index}
-                href={`/tags/${encodeURIComponent(tag!.toLowerCase())}`}
-                className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

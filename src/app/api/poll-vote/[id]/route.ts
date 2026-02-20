@@ -124,7 +124,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Poll not found' }, { status: 404 })
     }
 
-    if (poll.status !== 'active') {
+    const isActive = poll.status === 'active' ||
+      (poll.status === 'scheduled' && poll.publishedAt && new Date(poll.publishedAt) <= new Date())
+    if (!isActive) {
       return NextResponse.json({ error: 'Poll is not active' }, { status: 400 })
     }
 

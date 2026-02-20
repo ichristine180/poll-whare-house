@@ -25,7 +25,13 @@ async function getPolls() {
       where: {
         and: [
           publishedPollFilter(),
-          { or: [{ source: { equals: "admin" } }, { source: { exists: false } }] },
+          {
+            or: [
+              { source: { equals: "admin" } },
+              { source: { exists: false } },
+              { and: [{ source: { equals: "guest" } }, { featured: { equals: true } }] },
+            ],
+          },
         ],
       },
       sort: "-createdAt",

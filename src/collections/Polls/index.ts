@@ -77,11 +77,18 @@ export const Polls: CollectionConfig = {
           },
         },
         {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Optional image for this block (displayed below the title)',
+          },
+        },
+        {
           name: 'content',
           type: 'textarea',
-          required: true,
           admin: {
-            description: 'Block content (use line breaks for multiple lines)',
+            description: 'Block content (displayed below the image, optional)',
           },
         },
       ],
@@ -275,7 +282,10 @@ export const Polls: CollectionConfig = {
             if (siblingData.status === 'active' && !value) {
               return new Date()
             }
-            // Don't auto-set date for scheduled polls — they use the manually set publishedAt
+            // Auto-set status to scheduled if publishedAt is in the future
+            if (value && new Date(value) > new Date()) {
+              siblingData.status = 'scheduled'
+            }
             return value
           },
         ],
