@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, TrendingUp } from "lucide-react";
 import type { Poll, Media, Category } from "@/payload-types";
+
+interface CommentItem {
+  id: string;
+  name: string;
+  comment: string;
+  createdAt: string;
+}
 
 // Social media icons
 const FacebookIcon = () => (
@@ -225,6 +232,12 @@ export function VotePoll({ poll }: VotePollProps) {
   const [noMorePolls, setNoMorePolls] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [badge, setBadge] = useState<{ title: string; subtext: string } | null>(null);
+  const [comments, setComments] = useState<CommentItem[]>([]);
+  const [commentName, setCommentName] = useState("");
+  const [commentEmail, setCommentEmail] = useState("");
+  const [commentText, setCommentText] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [commentError, setCommentError] = useState("");
 
   const heroImage = currentPoll.heroImage as Media | null;
   const heroImageUrl = heroImage?.url || null;
@@ -289,6 +302,67 @@ export function VotePoll({ poll }: VotePollProps) {
     }
   }, [hasVoted, categories.length]);
 
+  // Fetch comments when user has voted and comments are enabled
+  useEffect(() => {
+    if (hasVoted && currentPoll.pollSettings?.addComments) {
+      const fetchComments = async () => {
+        try {
+          const res = await fetch(`/api/comments/${currentPoll.id}`);
+          const data = await res.json();
+          if (data.comments) {
+            setComments(data.comments);
+          }
+        } catch (error) {
+          console.error("Error fetching comments:", error);
+        }
+      };
+      fetchComments();
+    }
+  }, [hasVoted, currentPoll.id, currentPoll.pollSettings?.addComments]);
+
+  const handleCommentSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setCommentError("");
+
+    if (!commentEmail.trim()) {
+      setCommentError("Email is required");
+      return;
+    }
+    if (!commentText.trim()) {
+      setCommentError("Comment is required");
+      return;
+    }
+
+    setIsSubmittingComment(true);
+    try {
+      const res = await fetch(`/api/comments/${currentPoll.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: commentName.trim() || "Anonymous",
+          email: commentEmail.trim(),
+          comment: commentText.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setComments((prev) => [data.comment, ...prev]);
+        setCommentName("");
+        setCommentEmail("");
+        setCommentText("");
+      } else {
+        setCommentError(data.error || "Failed to submit comment");
+      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      setCommentError("Failed to submit comment. Please try again.");
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
   const handleNextPoll = async () => {
     setIsLoadingNextPoll(true);
     setNoMorePolls(false);
@@ -306,6 +380,11 @@ export function VotePoll({ poll }: VotePollProps) {
         setTotalVotes(data.poll.totalVotes || 0);
         setShowResults(false);
         setBadge(null);
+        setComments([]);
+        setCommentName("");
+        setCommentEmail("");
+        setCommentText("");
+        setCommentError("");
         // Update URL without navigation
         window.history.pushState({}, "", `/${data.poll.slug}`);
       } else {
@@ -662,6 +741,72 @@ export function VotePoll({ poll }: VotePollProps) {
               </div>
 
             
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Comments Section - show after voting when enabled */}
+      {hasVoted && currentPoll.pollSettings?.addComments && (
+        <div className="mb-6">
+          <h3 className="font-semibold text-gray-900 mb-4">Comments</h3>
+
+          {/* Comment Form */}
+          <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
+            <input
+              type="text"
+              placeholder="Name (optional, defaults to Anonymous)"
+              value={commentName}
+              onChange={(e) => setCommentName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+            <input
+              type="email"
+              placeholder="Email (required, not shown publicly)"
+              value={commentEmail}
+              onChange={(e) => setCommentEmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+            <textarea
+              placeholder="Write your comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              required
+              maxLength={500}
+              rows={3}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            />
+            <p className="text-xs text-gray-400 text-right">{commentText.length}/500</p>
+            {commentError && (
+              <p className="text-red-500 text-sm">{commentError}</p>
+            )}
+            <button
+              type="submit"
+              disabled={isSubmittingComment}
+              className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+            >
+              {isSubmittingComment ? "Submitting..." : "Submit Comment"}
+            </button>
+          </form>
+
+          {/* Comments List */}
+          {comments.length > 0 && (
+            <div className="space-y-4">
+              {comments.map((c) => (
+                <div
+                  key={c.id}
+                  className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-900">{c.name}</span>
+                    <span className="text-sm text-gray-500">
+                      {new Date(c.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 whitespace-pre-line">{c.comment}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>
