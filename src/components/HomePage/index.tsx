@@ -35,7 +35,7 @@ async function getPolls() {
         ],
       },
       sort: "-createdAt",
-      limit: 8,
+      limit: 20,
       depth: 2,
     }),
     payload.find({

@@ -173,19 +173,19 @@ function ShareCard({
               )}
             </div>
           </div>
-           <div className="flex flex-row gap-4 sm:gap-6 mt-3">
-        {results.map((option, index) => (
-          <div key={index} className="flex items-center gap-1.5 sm:gap-2">
-            <div
-              className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm flex-shrink-0"
-              style={{ backgroundColor: getColor(option.text, index) }}
-            />
-            <span className="text-[13px] sm:text-[15px] font-medium text-gray-800">
-              {option.text}
-            </span>
+          <div className="flex flex-row gap-4 sm:gap-6 mt-3">
+            {results.map((option, index) => (
+              <div key={index} className="flex items-center gap-1.5 sm:gap-2">
+                <div
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm flex-shrink-0"
+                  style={{ backgroundColor: getColor(option.text, index) }}
+                />
+                <span className="text-[13px] sm:text-[15px] font-medium text-gray-800">
+                  {option.text}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
         </div>
 
         {/* Vote Info */}
@@ -201,17 +201,17 @@ function ShareCard({
           {votedOption && (
             <>
               <p className="text-[16px] sm:text-[18px] text-gray-800">
-                I <span className="font-bold">voted</span> {votedOption} what about you ?
+                I <span className="font-bold">voted</span> {votedOption} what
+                about you ?
               </p>
               <p className="text-[14px] sm:text-[16px] text-gray-500">
-                {results.find(r => r.text === votedOption)?.percentage || 0}% choose the same.
+                {results.find((r) => r.text === votedOption)?.percentage || 0}%
+                choose the same.
               </p>
             </>
           )}
         </div>
-        
       </div>
-     
     </div>
   );
 }
@@ -231,7 +231,9 @@ export function VotePoll({ poll }: VotePollProps) {
   const [isLoadingNextPoll, setIsLoadingNextPoll] = useState(false);
   const [noMorePolls, setNoMorePolls] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [badge, setBadge] = useState<{ title: string; subtext: string } | null>(null);
+  const [badge, setBadge] = useState<{ title: string; subtext: string } | null>(
+    null,
+  );
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [commentName, setCommentName] = useState("");
   const [commentEmail, setCommentEmail] = useState("");
@@ -244,15 +246,6 @@ export function VotePoll({ poll }: VotePollProps) {
 
   // Get tags from poll
   const tags = currentPoll.tags?.map((t) => t.tag).filter(Boolean) || [];
-
-  // Pillar config
-  const pillarConfig: Record<string, { label: string; color: string; bg: string }> = {
-    belief: { label: 'Belief', color: 'text-purple-700', bg: 'bg-purple-50 hover:bg-purple-100' },
-    boundary: { label: 'Boundary', color: 'text-amber-700', bg: 'bg-amber-50 hover:bg-amber-100' },
-    desire: { label: 'Desire', color: 'text-rose-700', bg: 'bg-rose-50 hover:bg-rose-100' },
-    duty: { label: 'Duty', color: 'text-blue-700', bg: 'bg-blue-50 hover:bg-blue-100' },
-  };
-  const pillar = currentPoll.pillar ? pillarConfig[currentPoll.pillar] : null;
 
   const checkVoteStatus = useCallback(async () => {
     try {
@@ -456,7 +449,7 @@ export function VotePoll({ poll }: VotePollProps) {
       case "facebook":
         window.open(
           `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-          "_blank"
+          "_blank",
         );
         break;
       case "whatsapp":
@@ -465,20 +458,20 @@ export function VotePoll({ poll }: VotePollProps) {
         } else {
           window.open(
             `https://web.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`,
-            "_blank"
+            "_blank",
           );
         }
         break;
       case "twitter":
         window.open(
           `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
-          "_blank"
+          "_blank",
         );
         break;
       case "linkedin":
         window.open(
           `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`,
-          "_blank"
+          "_blank",
         );
         break;
     }
@@ -501,19 +494,19 @@ export function VotePoll({ poll }: VotePollProps) {
             Home
           </Link>
           <ChevronRight className="w-4 h-4" />
-          {pillar && currentPoll.pillar ? (
-            <>
-              <Link href={`/pillars/${currentPoll.pillar}`} className={`hover:text-gray-700`}>
-                {pillar.label}
-              </Link>
-              <ChevronRight className="w-4 h-4" />
-            </>
-          ) : null}
           <span className="text-indigo-600">Poll</span>
         </nav>
         {tags.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
-            <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              className="w-3.5 h-3.5 text-gray-400 flex-shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
               <line x1="7" y1="7" x2="7.01" y2="7" />
             </svg>
@@ -529,22 +522,6 @@ export function VotePoll({ poll }: VotePollProps) {
           </div>
         )}
       </div>
-
-      {/* Pillar Badge */}
-      {pillar && currentPoll.pillar && (
-        <div className="mb-3">
-          <Link
-            href={`/pillars/${currentPoll.pillar}`}
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-semibold ${pillar.color} ${pillar.bg} transition-colors`}
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            {pillar.label}
-          </Link>
-        </div>
-      )}
 
       {/* Question - show only before voting */}
       {!hasVoted && (
@@ -650,7 +627,7 @@ export function VotePoll({ poll }: VotePollProps) {
       {/* Share Card - show after voting */}
       {hasVoted && !showResults && results.length > 0 && (
         <div className="mb-6">
-          <div className="rounded-xl overflow-hidden">
+          <div className="rounded-xl overflow-hidden flex justify-center">
             <ShareCard
               question={currentPoll.question}
               results={results}
@@ -674,7 +651,7 @@ export function VotePoll({ poll }: VotePollProps) {
               <div className="flex gap-3">
                 <button
                   onClick={() => handleShare("facebook")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <FacebookIcon />
                   <span className="text-[14px] font-medium hidden sm:inline">
@@ -683,7 +660,7 @@ export function VotePoll({ poll }: VotePollProps) {
                 </button>
                 <button
                   onClick={() => handleShare("whatsapp")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <WhatsAppIcon />
                   <span className="text-[14px] font-medium hidden sm:inline">
@@ -701,7 +678,7 @@ export function VotePoll({ poll }: VotePollProps) {
                 </button>
                 <button
                   onClick={() => handleShare("linkedin")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <LinkedInIcon />
                   <span className="text-[14px] font-medium hidden sm:inline">
@@ -709,48 +686,50 @@ export function VotePoll({ poll }: VotePollProps) {
                   </span>
                 </button>
               </div>
-
-              {/* Take Another Poll - near share buttons */}
-              <div className="flex justify-center mt-4">
-                {noMorePolls ? (
-                  <div className="text-center text-gray-600 py-3">
-                    No more polls available at the moment
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleNextPoll}
-                    disabled={isLoadingNextPoll}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
-                  >
-                    {isLoadingNextPoll ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M3 12h18M3 6h18M3 18h18" />
-                      </svg>
-                    )}
-                    {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
-                  </button>
-                )}
-              </div>
-
-            
             </div>
           )}
+
+          {/* Action Buttons Row */}
+          <div className="flex gap-3 py-6">
+            {!noMorePolls && (
+              <button
+                onClick={handleNextPoll}
+                disabled={isLoadingNextPoll}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+              >
+                {isLoadingNextPoll ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                  </svg>
+                )}
+                {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
+              </button>
+            )}
+            <Link
+              href="/create"
+              className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-indigo-50 text-indigo-700 font-medium rounded-lg hover:bg-indigo-100 transition-colors"
+            >
+              Create Your Poll
+            </Link>
+          </div>
         </div>
       )}
 
       {/* Comments Section - show after voting when enabled */}
       {hasVoted && currentPoll.pollSettings?.addComments && (
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Comments</h3>
-
+          <h3 className="font-semibold text-gray-900 mb-4">
+            {" "}
+            {currentPoll.question}
+          </h3>
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
             <input
@@ -777,7 +756,9 @@ export function VotePoll({ poll }: VotePollProps) {
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             />
-            <p className="text-xs text-gray-400 text-right">{commentText.length}/500</p>
+            <p className="text-xs text-gray-400 text-right">
+              {commentText.length}/500
+            </p>
             {commentError && (
               <p className="text-red-500 text-sm">{commentError}</p>
             )}
@@ -804,7 +785,9 @@ export function VotePoll({ poll }: VotePollProps) {
                       {new Date(c.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-gray-700 whitespace-pre-line">{c.comment}</p>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {c.comment}
+                  </p>
                 </div>
               ))}
             </div>
@@ -867,71 +850,68 @@ export function VotePoll({ poll }: VotePollProps) {
                   </span>
                 </button>
               </div>
-
             </div>
           )}
         </>
       ) : !showResults ? (
         <>
           {/* About This Poll - Content Blocks */}
-          {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
-            <div className="mb-6 border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span className="font-semibold text-gray-900">About this POLL!</span>
+          {currentPoll.contentBlocks &&
+            currentPoll.contentBlocks.length > 0 && (
+              <div className="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                  <div className="flex items-center gap-2">
+                    <svg
+                      className="w-5 h-5 text-gray-600"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                      About this POLL!
+                    </span>
+                  </div>
+                </div>
+                {/* <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                  <p className="text-gray-800 font-medium">
+                    {currentPoll.question}
+                  </p>
+                </div> */}
+                <div className="p-4">
+                  {currentPoll.contentBlocks.map((block, index) => (
+                    <div key={index}>
+                      {index > 0 && (
+                        <hr className="border-dashed border-gray-300 my-4" />
+                      )}
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-2">
+                          {block.title}
+                        </h4>
+                        {(block.image as Media | null)?.url && (
+                          <div className="mb-3 rounded-lg overflow-hidden">
+                            <Image
+                              src={(block.image as Media).url!}
+                              alt={block.title || ""}
+                              width={(block.image as Media).width || 800}
+                              height={(block.image as Media).height || 450}
+                              className="w-full h-auto object-cover"
+                            />
+                          </div>
+                        )}
+                        {block.content && (
+                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            {block.content}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                <p className="text-gray-800 font-medium">{currentPoll.question}</p>
-              </div>
-              <div className="p-4">
-                {currentPoll.contentBlocks.map((block, index) => (
-                  <div key={index}>
-                    {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                        {block.title}
-                      </h4>
-                      {(block.image as Media | null)?.url && (
-                        <div className="mb-3 rounded-lg overflow-hidden">
-                          <Image
-                            src={(block.image as Media).url!}
-                            alt={block.title || ''}
-                            width={(block.image as Media).width || 800}
-                            height={(block.image as Media).height || 450}
-                            className="w-full h-auto object-cover"
-                          />
-                        </div>
-                      )}
-                      {block.content && (
-                        <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                          {block.content}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Create Your Own Poll Section */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3">
-              create your own poll
-            </h3>
-            <Link
-              href="/create"
-              className="block bg-indigo-50 rounded-lg py-4 px-6 text-center hover:bg-indigo-100 transition-colors"
-            >
-              <p className="text-gray-800 font-medium">
-                No Registration or signup Required Free
-              </p>
-            </Link>
-          </div>
+            )}
 
           {/* Interest Section */}
           {categories.length > 0 && (
@@ -1021,33 +1001,9 @@ export function VotePoll({ poll }: VotePollProps) {
           {/* Share Section */}
           {!currentPoll.pollSettings?.hideShareOptions && (
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">
-                  Share Your Vote
-                </h3>
-                {!noMorePolls && (
-                  <button
-                    onClick={handleNextPoll}
-                    disabled={isLoadingNextPoll}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
-                  >
-                    {isLoadingNextPoll ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <svg
-                        className="w-4 h-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M3 12h18M3 6h18M3 18h18" />
-                      </svg>
-                    )}
-                    {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
-                  </button>
-                )}
-              </div>
+              <h3 className="font-semibold text-gray-900 mb-4">
+                Share Your Vote
+              </h3>
               <div className="flex gap-3">
                 <button
                   onClick={() => handleShare("facebook")}
@@ -1088,56 +1044,85 @@ export function VotePoll({ poll }: VotePollProps) {
               </div>
 
               {/* About This Poll - Content Blocks */}
-              {currentPoll.contentBlocks && currentPoll.contentBlocks.length > 0 && (
-                <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span className="font-semibold text-gray-900">About this POLL!</span>
+              {currentPoll.contentBlocks &&
+                currentPoll.contentBlocks.length > 0 && (
+                  <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                      <div className="flex items-center gap-2">
+                        <svg
+                          className="w-5 h-5 text-gray-600"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span className="font-semibold text-gray-900">
+                          About this POLL!
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <p className="text-gray-800 font-medium">{currentPoll.question}</p>
-                  </div>
-                  <div className="p-4">
-                    {currentPoll.contentBlocks.map((block, index) => (
-                      <div key={index}>
-                        {index > 0 && <hr className="border-dashed border-gray-300 my-4" />}
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                            {block.title}
-                          </h4>
-                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            {block.content}
+                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                      <p className="text-gray-800 font-medium">
+                        {currentPoll.question}
+                      </p>
+                    </div>
+                    <div className="p-4">
+                      {currentPoll.contentBlocks.map((block, index) => (
+                        <div key={index}>
+                          {index > 0 && (
+                            <hr className="border-dashed border-gray-300 my-4" />
+                          )}
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                              {block.title}
+                            </h4>
+                            <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                              {block.content}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           )}
 
-          {/* Create Your Own Poll Section */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">
-              create your own poll
-            </h3>
+          {/* Action Buttons Row */}
+          <div className="flex gap-3">
+            {!noMorePolls && (
+              <button
+                onClick={handleNextPoll}
+                disabled={isLoadingNextPoll}
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+              >
+                {isLoadingNextPoll ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                  </svg>
+                )}
+                {isLoadingNextPoll ? "Loading..." : "Take Another Poll"}
+              </button>
+            )}
             <Link
               href="/create"
-              className="block bg-indigo-50 rounded-lg py-4 px-6 text-center hover:bg-indigo-100 transition-colors"
+              className="flex-1 inline-flex items-center justify-center px-4 py-3 bg-indigo-50 text-indigo-700 font-medium rounded-lg hover:bg-indigo-100 transition-colors"
             >
-              <p className="text-gray-800 font-medium">
-                No Registration or signup Required Free
-              </p>
+              Create Your Poll
             </Link>
           </div>
         </>
       )}
-
     </div>
   );
 }

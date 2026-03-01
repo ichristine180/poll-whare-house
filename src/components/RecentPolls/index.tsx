@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ChevronRight, ChevronLeft, BarChart3 } from 'lucide-react'
+import { ChevronRight, BarChart3 } from 'lucide-react'
 
 interface Poll {
   id: string
@@ -43,71 +43,32 @@ function timeAgo(dateString: string): string {
 export function RecentPolls() {
   const [polls, setPolls] = useState<Poll[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pagination, setPagination] = useState({
-    totalPages: 1,
-    totalDocs: 0,
-    hasNextPage: false,
-    hasPrevPage: false,
-  })
-
-  const pollsPerPage = 5
-
-  const fetchPolls = useCallback(async () => {
-    setIsLoading(true)
-    try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: pollsPerPage.toString(),
-        sort: '-createdAt',
-        status: 'active',
-      })
-
-      const response = await fetch(`/api/polls-list?${params}`)
-      const result = await response.json()
-
-      if (response.ok) {
-        setPolls(result.docs || [])
-        setPagination({
-          totalPages: result.totalPages || 1,
-          totalDocs: result.totalDocs || 0,
-          hasNextPage: result.hasNextPage || false,
-          hasPrevPage: result.hasPrevPage || false,
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching polls:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [currentPage])
 
   useEffect(() => {
-    fetchPolls()
-  }, [fetchPolls])
+    const fetchPolls = async () => {
+      try {
+        const params = new URLSearchParams({
+          page: '1',
+          limit: '20',
+          sort: '-createdAt',
+          status: 'active',
+        })
 
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = []
-    const totalPages = pagination.totalPages
+        const response = await fetch(`/api/polls-list?${params}`)
+        const result = await response.json()
 
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
+        if (response.ok) {
+          setPolls(result.docs || [])
+        }
+      } catch (error) {
+        console.error('Error fetching polls:', error)
+      } finally {
+        setIsLoading(false)
       }
-    } else {
-      pages.push(1)
-      if (currentPage > 3) pages.push('...')
-      const start = Math.max(2, currentPage - 1)
-      const end = Math.min(totalPages - 1, currentPage + 1)
-      for (let i = start; i <= end; i++) {
-        if (i !== 1 && i !== totalPages) pages.push(i)
-      }
-      if (currentPage < totalPages - 2) pages.push('...')
-      pages.push(totalPages)
     }
 
-    return pages
-  }
+    fetchPolls()
+  }, [])
 
   return (
     <div>
@@ -156,62 +117,6 @@ export function RecentPolls() {
           </div>
         )}
       </div>
-
-      {/* Pagination */}
-      {!isLoading && pagination.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1 mt-4">
-          <button
-            onClick={() => setCurrentPage(1)}
-            disabled={currentPage === 1}
-            className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            &laquo;
-          </button>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={!pagination.hasPrevPage}
-            className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          {getPageNumbers().map((page, index) =>
-            page === '...' ? (
-              <span
-                key={`ellipsis-${index}`}
-                className="w-8 h-8 flex items-center justify-center text-gray-500"
-              >
-                ...
-              </span>
-            ) : (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page as number)}
-                className={`w-8 h-8 flex items-center justify-center rounded text-sm font-medium transition-colors ${
-                  currentPage === page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {page}
-              </button>
-            ),
-          )}
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pagination.totalPages))}
-            disabled={!pagination.hasNextPage}
-            className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setCurrentPage(pagination.totalPages)}
-            disabled={currentPage === pagination.totalPages}
-            className="w-8 h-8 flex items-center justify-center rounded text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            &raquo;
-          </button>
-        </div>
-      )}
     </div>
   )
 }
