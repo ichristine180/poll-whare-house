@@ -96,7 +96,7 @@ export function InterestHub({
         </Link>
         <ChevronRight className="w-4 h-4" />
         <Link href="/categories" className="hover:text-gray-700">
-          Interest
+          Category
         </Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-indigo-600">{category.title}</span>

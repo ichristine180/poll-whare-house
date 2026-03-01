@@ -316,6 +316,24 @@ export const Polls: CollectionConfig = {
       },
     },
     {
+      name: 'creatorEmail',
+      type: 'email',
+      admin: {
+        position: 'sidebar',
+        description: 'Email to notify when poll reaches 10 votes',
+      },
+    },
+    {
+      name: 'statsEmailSent',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Whether the 10-vote stats email has been sent',
+      },
+    },
+    {
       name: 'source',
       type: 'select',
       defaultValue: 'admin',

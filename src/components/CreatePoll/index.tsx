@@ -20,6 +20,7 @@ export function CreatePollForm() {
     alt: string;
   } | null>(null);
   const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [creatorEmail, setCreatorEmail] = useState("");
   const [formData, setFormData] = useState({
     question: "",
     loginToVote: false,
@@ -104,6 +105,7 @@ export function CreatePollForm() {
           endDate: formData.endDate || null,
           status: "active",
           heroImage: uploadedImage?.id || null,
+          creatorEmail: creatorEmail.trim() || null,
         }),
       });
 
@@ -299,6 +301,26 @@ export function CreatePollForm() {
           Don&apos;t worry we will save any information entered above.
         </p>
       </div> */}
+
+      {/* Creator Email */}
+      <div className="bg-gray-100 rounded-lg p-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Get notified when your poll hits 10 votes{" "}
+          <span className="text-gray-400 font-normal">(optional)</span>
+        </label>
+        <Input
+          type="email"
+          placeholder="your@email.com"
+          value={creatorEmail}
+          onChange={(e) => setCreatorEmail(e.target.value)}
+          className="border-0 bg-white focus-visible:ring-1 focus-visible:ring-indigo-500"
+        />
+        {creatorEmail && (
+          <p className="text-xs text-gray-500 mt-1.5">
+            We&apos;ll send you poll statistics and a link to your poll once it reaches 10 votes.
+          </p>
+        )}
+      </div>
 
       {/* reCAPTCHA Style Checkbox */}
       <div className="border border-gray-300 rounded bg-[#f9f9f9] shadow-sm">

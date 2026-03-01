@@ -93,7 +93,7 @@ export function InterestHubPage({
           Home
         </Link>
         <ChevronRight className="w-4 h-4" />
-        <span className="text-indigo-600">Interest Hub</span>
+        <span className="text-indigo-600">Category Hub</span>
       </nav>
 
       {/* Page Title */}

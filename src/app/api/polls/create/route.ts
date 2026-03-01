@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const payload = await getPayloadHMR({ config: configPromise })
     const body = await request.json()
 
-    const { question, options, pollSettings, endDate, status, heroImage } = body
+    const { question, options, pollSettings, endDate, status, heroImage, creatorEmail } = body
 
     if (!question || !options || options.length < 2) {
       return NextResponse.json(
@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
         publishedAt: new Date().toISOString(),
         source: 'guest',
         heroImage: heroImage || null,
+        ...(creatorEmail ? { creatorEmail: creatorEmail.toLowerCase().trim() } : {}),
       },
     })
 

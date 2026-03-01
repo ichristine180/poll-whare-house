@@ -726,10 +726,11 @@ export function VotePoll({ poll }: VotePollProps) {
       {/* Comments Section - show after voting when enabled */}
       {hasVoted && currentPoll.pollSettings?.addComments && (
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 mb-4">
+          <h2 className="font-semibold text-gray-900 mb-4">
             {" "}
             {currentPoll.question}
-          </h3>
+          </h2>
+          <p className="text-gray-800 font-medium">Comments</p>
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
             <input
@@ -812,23 +813,23 @@ export function VotePoll({ poll }: VotePollProps) {
               <h3 className="font-semibold text-gray-900 mb-3">
                 Tell Your Friends About This Poll
               </h3>
-              <div className="flex gap-3 mb-6">
+              <div className="flex gap-3">
                 <button
                   onClick={() => handleShare("facebook")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <FacebookIcon />
-                  <span className="text-[14px] font-medium">
-                    ({totalVotes})
+                  <span className="text-[14px] font-medium hidden sm:inline">
+                    Facebook
                   </span>
                 </button>
                 <button
                   onClick={() => handleShare("whatsapp")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <WhatsAppIcon />
-                  <span className="text-[14px] font-medium">
-                    ({totalVotes})
+                  <span className="text-[14px] font-medium hidden sm:inline">
+                    Whatsapp
                   </span>
                 </button>
                 <button
@@ -836,17 +837,17 @@ export function VotePoll({ poll }: VotePollProps) {
                   className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <XTwitterIcon />
-                  <span className="text-[14px] font-medium">
-                    ({totalVotes})
+                  <span className="text-[14px] font-medium hidden sm:inline">
+                    Twitter
                   </span>
                 </button>
                 <button
                   onClick={() => handleShare("linkedin")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <LinkedInIcon />
-                  <span className="text-[14px] font-medium">
-                    ({totalVotes})
+                  <span className="text-[14px] font-medium hidden sm:inline">
+                    Linkedin
                   </span>
                 </button>
               </div>
@@ -870,7 +871,7 @@ export function VotePoll({ poll }: VotePollProps) {
                     >
                       <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <span className="text-sm font-semibold text-gray-500  tracking-wide mb-2">
                       About this POLL!
                     </span>
                   </div>
@@ -997,98 +998,6 @@ export function VotePoll({ poll }: VotePollProps) {
               {totalVotes} total votes
             </p>
           </div>
-
-          {/* Share Section */}
-          {!currentPoll.pollSettings?.hideShareOptions && (
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Share Your Vote
-              </h3>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleShare("facebook")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <FacebookIcon />
-                  <span className="text-[14px] font-medium hidden sm:inline">
-                    Facebook
-                  </span>
-                </button>
-                <button
-                  onClick={() => handleShare("whatsapp")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                >
-                  <WhatsAppIcon />
-                  <span className="text-[14px] font-medium hidden sm:inline">
-                    Whatsapp
-                  </span>
-                </button>
-                <button
-                  onClick={() => handleShare("twitter")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-                >
-                  <XTwitterIcon />
-                  <span className="text-[14px] font-medium hidden sm:inline">
-                    Twitter
-                  </span>
-                </button>
-                <button
-                  onClick={() => handleShare("linkedin")}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
-                >
-                  <LinkedInIcon />
-                  <span className="text-[14px] font-medium hidden sm:inline">
-                    Linkedin
-                  </span>
-                </button>
-              </div>
-
-              {/* About This Poll - Content Blocks */}
-              {currentPoll.contentBlocks &&
-                currentPoll.contentBlocks.length > 0 && (
-                  <div className="mt-6 border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                      <div className="flex items-center gap-2">
-                        <svg
-                          className="w-5 h-5 text-gray-600"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span className="font-semibold text-gray-900">
-                          About this POLL!
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                      <p className="text-gray-800 font-medium">
-                        {currentPoll.question}
-                      </p>
-                    </div>
-                    <div className="p-4">
-                      {currentPoll.contentBlocks.map((block, index) => (
-                        <div key={index}>
-                          {index > 0 && (
-                            <hr className="border-dashed border-gray-300 my-4" />
-                          )}
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                              {block.title}
-                            </h4>
-                            <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                              {block.content}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-            </div>
-          )}
 
           {/* Action Buttons Row */}
           <div className="flex gap-3">
