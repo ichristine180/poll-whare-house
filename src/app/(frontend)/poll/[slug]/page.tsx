@@ -20,6 +20,7 @@ async function getPoll(slug: string): Promise<Poll | null> {
       slug: { equals: slug },
     },
     limit: 1,
+    depth: 2,
   })
 
   return result.docs[0] as Poll | null

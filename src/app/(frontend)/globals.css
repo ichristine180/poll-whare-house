@@ -49,7 +49,7 @@
     --error: 10 100% 86%;
   }
 
-  [data-theme='dark'] {
+  [data-theme="dark"] {
     --background: 0 0% 0%;
     --foreground: 210 40% 98%;
 
@@ -91,8 +91,27 @@
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
     padding-top: 3rem; /* Space for fixed header (h-12 = 3rem) */
+    font-size: 18px;
+    line-height: 1.7;
+    font-family: system-ui, sans-serif;
   }
-
+  h1 {
+    font-size: 28px;
+  }
+  h2 {
+    font-size: 25px;
+  }
+  h3 {
+    font-size: 22px;
+  }
+  h4 {
+    font-size: 20px;
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 1.2em;
+  }
   /* Apply zoom to main content only, not header */
   .zoom-content {
     zoom: 0.9;
@@ -110,7 +129,7 @@ html {
   }
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
   opacity: initial;
 }
 
@@ -121,8 +140,8 @@ html[data-theme='dark'] {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* RichText content styling */

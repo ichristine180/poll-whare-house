@@ -98,11 +98,11 @@ export function InterestHubPage({
 
       {/* Page Title */}
       <div className="text-center mb-6">
-        <h1 className="text-gray-900 text-2xl sm:text-[20px] font-bold mb-2">
+        <h1 className="text-gray-900 font-bold mb-2">
           Explore Topics That Interest You
           <span className="text-indigo-600">!</span>
         </h1>
-        <p className="text-gray-600 text-lg sm:text-base">
+        <p className="text-gray-600">
           Browse polls by category. Discover what people think about various topics.
         </p>
       </div>
@@ -145,9 +145,9 @@ export function InterestHubPage({
       <div className="flex items-center justify-between mb-4 border-b border-gray-200 pb-2">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-lg font-semibold text-gray-900">All Categories</h2>
+          <h2 className="font-semibold text-gray-900">All Categories</h2>
         </div>
-        <span className="text-sm text-gray-500">{totalDocs} categories</span>
+        <span className="text-gray-500">{totalDocs} categories</span>
       </div>
 
       {/* Categories Grid */}
@@ -191,7 +191,7 @@ export function InterestHubPage({
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-8 h-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
+          <h3 className="font-medium text-gray-900 mb-2">No categories found</h3>
           <p className="text-gray-500">
             {initialSearch
               ? `No categories matching "${initialSearch}"`

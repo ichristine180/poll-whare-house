@@ -200,11 +200,11 @@ function ShareCard({
 
           {votedOption && (
             <>
-              <p className="text-[16px] sm:text-[18px] text-gray-800">
+              <p className="text-center text-gray-800">
                 I <span className="font-bold">voted</span> {votedOption} what
                 about you ?
               </p>
-              <p className="text-[14px] sm:text-[16px] text-gray-500">
+              <p className="text-center text-gray-500">
                 {results.find((r) => r.text === votedOption)?.percentage || 0}%
                 choose the same.
               </p>
@@ -690,7 +690,7 @@ export function VotePoll({ poll }: VotePollProps) {
           )}
 
           {/* Action Buttons Row */}
-          <div className="flex gap-3 py-6">
+          <div className="flex flex-col sm:flex-row gap-3 py-6">
             {!noMorePolls && (
               <button
                 onClick={handleNextPoll}
@@ -724,88 +724,117 @@ export function VotePoll({ poll }: VotePollProps) {
       )}
 
       {/* Comments Section - show after voting when enabled */}
-      {hasVoted && currentPoll.pollSettings?.addComments && (
-        <div className="mb-6">
-          <h2 className="font-semibold text-gray-900 mb-4">
-            {" "}
-            {currentPoll.question}
-          </h2>
-          <p className="text-gray-800 font-medium">Comments</p>
-          {/* Comment Form */}
-          <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
-            <input
-              type="text"
-              placeholder="Name (optional, defaults to Anonymous)"
-              value={commentName}
-              onChange={(e) => setCommentName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-            <input
-              type="email"
-              placeholder="Email (required, not shown publicly)"
-              value={commentEmail}
-              onChange={(e) => setCommentEmail(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-            <textarea
-              placeholder="Write your comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              required
-              maxLength={500}
-              rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-            />
-            <p className="text-xs text-gray-400 text-right">
-              {commentText.length}/500
-            </p>
-            {commentError && (
-              <p className="text-red-500 text-sm">{commentError}</p>
-            )}
-            <button
-              type="submit"
-              disabled={isSubmittingComment}
-              className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
-            >
-              {isSubmittingComment ? "Submitting..." : "Submit Comment"}
-            </button>
-          </form>
 
-          {/* Comments List */}
-          {comments.length > 0 && (
-            <div className="space-y-4">
-              {comments.map((c) => (
-                <div
-                  key={c.id}
-                  className="p-4 bg-gray-50 rounded-lg border border-gray-200"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-gray-900">{c.name}</span>
-                    <span className="text-sm text-gray-500">
-                      {new Date(c.createdAt).toLocaleDateString()}
-                    </span>
+      <div className="mb-6">
+        <h2 className="font-semibold text-gray-900 mb-4">
+          {" "}
+          {currentPoll.question}
+        </h2>
+        {hasVoted && currentPoll.pollSettings?.addComments && (
+          <>
+            {" "}
+            <p className="text-gray-800 font-medium">Comments</p>
+            {/* Comment Form */}
+            <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
+              <input
+                type="text"
+                placeholder="Name (optional, defaults to Anonymous)"
+                value={commentName}
+                onChange={(e) => setCommentName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <input
+                type="email"
+                placeholder="Email (required, not shown publicly)"
+                value={commentEmail}
+                onChange={(e) => setCommentEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <textarea
+                placeholder="Write your comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                required
+                maxLength={500}
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              />
+              <p className="text-xs text-gray-400 text-right">
+                {commentText.length}/500
+              </p>
+              {commentError && (
+                <p className="text-red-500 text-sm">{commentError}</p>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmittingComment}
+                className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+              >
+                {isSubmittingComment ? "Submitting..." : "Submit Comment"}
+              </button>
+            </form>
+            {/* Comments List */}
+            {comments.length > 0 && (
+              <div className="space-y-4">
+                {comments.map((c) => (
+                  <div
+                    key={c.id}
+                    className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-gray-900">
+                        {c.name}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {new Date(c.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 whitespace-pre-line">
+                      {c.comment}
+                    </p>
                   </div>
-                  <p className="text-gray-700 whitespace-pre-line">
-                    {c.comment}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Action Buttons */}
       {!hasVoted ? (
         <>
-          <button
-            onClick={handleVote}
-            disabled={selectedOption === null || isVoting}
-            className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-          >
-            {isVoting ? "Voting..." : "Vote"}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleVote}
+              disabled={selectedOption === null || isVoting}
+              className="flex-1 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              {isVoting ? "Voting..." : "Vote"}
+            </button>
+            {!noMorePolls && (
+              <button
+                onClick={handleNextPoll}
+                disabled={isLoadingNextPoll}
+                className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 transition-colors"
+              >
+                {isLoadingNextPoll ? (
+                  <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                  </svg>
+                )}
+                {isLoadingNextPoll ? "Loading..." : "Skip Poll"}
+              </button>
+            )}
+          </div>
 
           {/* Share Section - Before Voting */}
           {!currentPoll.pollSettings?.hideShareOptions && (
@@ -871,9 +900,9 @@ export function VotePoll({ poll }: VotePollProps) {
                     >
                       <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="text-sm font-semibold text-gray-500  tracking-wide mb-2">
+                    <h3 className="font-semibold text-gray-500  tracking-wide mb-2">
                       About this POLL!
-                    </span>
+                    </h3>
                   </div>
                 </div>
                 {/* <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
@@ -888,9 +917,15 @@ export function VotePoll({ poll }: VotePollProps) {
                         <hr className="border-dashed border-gray-300 my-4" />
                       )}
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-2">
+                        <h4 className="font-semibold text-gray-900 uppercase tracking-wide mb-2">
                           {block.title}
                         </h4>
+
+                        {block.content && (
+                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+                            {block.content}
+                          </div>
+                        )}
                         {(block.image as Media | null)?.url && (
                           <div className="mb-3 rounded-lg overflow-hidden">
                             <Image
@@ -898,13 +933,8 @@ export function VotePoll({ poll }: VotePollProps) {
                               alt={block.title || ""}
                               width={(block.image as Media).width || 800}
                               height={(block.image as Media).height || 450}
-                              className="w-full h-auto object-cover"
+                              className="w-full h-[200px] object-cover"
                             />
-                          </div>
-                        )}
-                        {block.content && (
-                          <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
-                            {block.content}
                           </div>
                         )}
                       </div>
@@ -1000,7 +1030,7 @@ export function VotePoll({ poll }: VotePollProps) {
           </div>
 
           {/* Action Buttons Row */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {!noMorePolls && (
               <button
                 onClick={handleNextPoll}
