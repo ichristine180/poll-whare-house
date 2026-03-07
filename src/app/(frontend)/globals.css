@@ -88,29 +88,49 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
-    padding-top: 3rem; /* Space for fixed header (h-12 = 3rem) */
-    font-size: 18px;
-    line-height: 1.7;
+    padding-top: 3rem; /* space for header */
+    font-size: 16px; /* smaller base font */
+    line-height: 1.6; /* tighter, cleaner line-height */
     font-family: system-ui, sans-serif;
   }
+
   h1 {
-    font-size: 28px;
+    font-size: 20px; /* reduced from 28px */
+    line-height: 1.3;
+    margin-bottom: 0.8em;
   }
+
   h2 {
-    font-size: 25px;
+    font-size: 18px; /* reduced from 25px */
+    line-height: 1.3;
+    margin-bottom: 0.75em;
   }
+
   h3 {
-    font-size: 22px;
+    font-size: 17px; /* reduced from 22px */
+    line-height: 1.25;
+    margin-bottom: 0.7em;
   }
+
   h4 {
-    font-size: 20px;
+    font-size: 16px; /* reduced from 20px */
+    line-height: 1.25;
+    margin-bottom: 0.6em;
   }
+
   p {
-    font-size: 17px;
-    line-height: 1.6;
-    margin-bottom: 1.2em;
+    font-size: 15px; /* reduced from 17px */
+    line-height: 1.5; /* slightly tighter */
+    margin-bottom: 1em;
+  }
+
+  /* Optional: small text for meta info */
+  small {
+    font-size: 13px;
+    line-height: 1.4;
   }
   /* Apply zoom to main content only, not header */
   .zoom-content {
